@@ -12,26 +12,30 @@ class AppNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
+    return SizedBox(
+      height: 70,
+      child: NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: onDestinationSelected,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
       destinations: const [
         NavigationDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
+          icon: Icon(Icons.home_outlined, size: 28,),
+          selectedIcon: Icon(Icons.home, size: 28,),
           label: 'Feed',
         ),
         NavigationDestination(
-          icon: Icon(Icons.add_box_outlined),
-          selectedIcon: Icon(Icons.add_box),
+          icon: Icon(Icons.add_box_outlined, size: 28,),
+          selectedIcon: Icon(Icons.add_box, size: 28,),
           label: 'Post',
         ),
         NavigationDestination(
-          icon: Icon(Icons.person_outline),
-          selectedIcon: Icon(Icons.person),
+          icon: Icon(Icons.person_outline, size: 28,),
+          selectedIcon: Icon(Icons.person, size: 28,),
           label: 'Profil',
         ),
       ],
+      )
     );
   }
 }

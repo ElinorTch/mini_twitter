@@ -15,6 +15,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Colors.blue,
+        navigationBarTheme: NavigationBarThemeData(
+          indicatorColor: Colors.transparent,
+        ),
       ),
       home: const HomePage(),
     );
