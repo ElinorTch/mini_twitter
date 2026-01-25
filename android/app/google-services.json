@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599906860098",
+    "project_id": "mini-twitter-dev",
+    "storage_bucket": "mini-twitter-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599906860098:android:0d793fa2d4f287fc04c1db",
+        "android_client_info": {
+          "package_name": "com.example.mini_twitter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZgnxvnwNEALCKarihnVHf7rHIBAUpEnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
