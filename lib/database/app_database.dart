@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:mini_twitter/models/post_with_user.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
@@ -43,3 +44,21 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 }
+
+extension PostQueries on AppDatabase {
+  Future<List<PostWithUser>> getPostsWithUsers() async {
+    final query = select(posts).join([
+      innerJoin(users, users.id.equalsExp(posts.authorId)),
+    ])
+      ..orderBy([OrderingTerm.desc(posts.createdAt)]);
+
+    final rows = await query.get();
+
+    return rows.map((row) {
+      final post = row.readTable(posts);
+      final user = row.readTable(users);
+      return PostWithUser(post: post, user: user);
+    }).toList();
+  }
+}
+
