@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        textTheme: GoogleFonts.beVietnamProTextTheme(),
         useMaterial3: true,
         colorSchemeSeed: Colors.blue,
         navigationBarTheme: NavigationBarThemeData(
