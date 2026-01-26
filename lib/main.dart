@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'firebase_options.dart';
 import 'package:mini_twitter/tab/navigation_bar.dart';
 
@@ -9,6 +10,10 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseUIAuth.configureProviders([
+    EmailAuthProvider(),
+  ]);
 
   runApp(const MyApp());
 }
