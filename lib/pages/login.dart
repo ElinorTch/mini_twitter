@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/components/labeled_input.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _loginFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,31 +49,49 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 40),
 
-              LabeledInput(
-                label: 'Email',
-                hint: 'Enter your email',
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-              ),
+              Form(
+                key: _loginFormKey,
+                child: Column(
+                  children: <Widget>[
+                    LabeledFormInput(
+                      label: 'Email', 
+                      hint: 'Enter your email', 
+                      controller: emailController, 
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
 
-              const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-              LabeledInput(
-                label: 'Password',
-                hint: 'Enter your password',
-                obscure: _obscure,
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                iconButton: IconButton(
-                  icon: Icon(
-                    _obscure ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscure = !_obscure;
-                    });
-                  },
+                    LabeledFormInput(
+                      label: 'Password', 
+                      hint: 'Enter your password', 
+                      controller: passwordController, 
+                      obscure: _obscure,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter a password';
+                        }
+                        return null;
+                      },
+                      iconButton: IconButton(
+                        icon: Icon(
+                          _obscure ? Icons.visibility_off : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscure = !_obscure;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -81,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    print('forgot password pressed');
+                    print("Forgot password pressed");
                   },
                   child: const Text(
                     "Forgot password?",
@@ -97,7 +117,14 @@ class _LoginPageState extends State<LoginPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  print('Login pressed');
+                  // Validate returns true if the form is valid, or false otherwise.
+                  if (_loginFormKey.currentState!.validate()) {
+                    // If the form is valid, display a snackbar. In the real world,
+                    // you'd often call a server or save the information in a database.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Email: ${emailController.text} and password:${passwordController.text}')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF137FEC),
