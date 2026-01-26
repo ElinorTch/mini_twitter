@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.beVietnamProTextTheme(),
+        textTheme: GoogleFonts.josefinSansTextTheme(),
         useMaterial3: true,
         colorSchemeSeed: Colors.blue,
         navigationBarTheme: NavigationBarThemeData(

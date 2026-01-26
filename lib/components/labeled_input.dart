@@ -44,6 +44,17 @@ class LabeledInput extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 0.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Colors.grey,
+                width: 0.5,
+              ),
             ),
             filled: true,
             fillColor: Colors.white70,

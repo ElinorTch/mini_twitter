@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Color(0xFFF6F7F8),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(left: 30, right: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -108,9 +108,23 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 child: const Text(
                   'Login',
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account? Sign Up",
+                    style: TextStyle(
+                      color: Color(0xFF617589),
+                    ),
+                  ),
+                ],
+              ), 
             ],
           ),
         ),
