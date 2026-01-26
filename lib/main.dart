@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:mini_twitter/pages/login.dart';
 import 'firebase_options.dart';
 import 'package:mini_twitter/tab/navigation_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,13 +28,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
         useMaterial3: true,
         colorSchemeSeed: Colors.blue,
         navigationBarTheme: NavigationBarThemeData(
           indicatorColor: Colors.transparent,
         ),
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
@@ -46,9 +49,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  final TextEditingController usernameController = TextEditingController();
 
-  final List<Widget> _pages = const [
-    Text( 'Feed Page' ),
+  final List<Widget> _pages = [
+    Text( 'Home Page' ),
     Text( 'Post Page' ),
     Text( 'Profil Page' ),
   ];
@@ -56,8 +60,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
-
+      body: Center(
+        child: _pages.elementAt(_selectedIndex),
+      ),
+      
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {
