@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
-import 'package:mini_twitter/components/labeled_input.dart';
+import 'package:mini_twitter/pages/registration.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,14 +11,22 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscure = true;
-
+  bool _isLoading = false;
+  
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
 
+  void setLoading(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: Color(0xFFF6F7F8),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -133,25 +141,44 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                ),
+                child: _isLoading 
+                  ? const CircularProgressIndicator(color: Colors.white) 
+                  : const Text(
+                      'Login',
+                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
               ),
 
-              SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account? Sign Up",
+                    "Don't have an account?",
                     style: TextStyle(
                       color: Color(0xFF617589),
                     ),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const RegistrationPage()),
+                      );
+                    },
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: Color(0xFF137FEC),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ],
               ), 
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -159,3 +186,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+
