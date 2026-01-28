@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/main.dart';
+import 'package:mini_twitter/pages/google_auth.dart';
 import 'package:mini_twitter/pages/registration.dart';
 
 class LoginPage extends StatefulWidget {
@@ -154,7 +156,15 @@ class _LoginPageState extends State<LoginPage> {
                     ),
               ),
 
-              SizedBox(height: MediaQuery.of(context).size.height * 0.20),
+              Divider(
+                height: 40,
+                thickness: 1,
+                color: Color(0xFFD1D5DB),
+              ),
+
+              GoogleAuthButton(),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
