@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/auth_gate.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/pages/registration.dart';
@@ -213,17 +212,6 @@ Future<void> handleLogin({
         email: email,
         password: password,
       );
-      Future.delayed(const Duration(seconds: 3), () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Connexion successfull !')),
-        );
-        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => const AuthGate(),
-          ),
-          (route) => false,
-        );
-      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
         message = 'Invalid login credentials.';
@@ -233,8 +221,9 @@ Future<void> handleLogin({
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to sign in: $message')),
       );
-    } finally {
       setLoading(false);
+    } finally {
+      // setLoading(false);
     }
   }
 }
