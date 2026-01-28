@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/auth_gate.dart';
 import 'package:mini_twitter/pages/login.dart';
 
 class LogoutButton extends StatelessWidget {
@@ -14,7 +15,7 @@ class LogoutButton extends StatelessWidget {
           Future.delayed(const Duration(seconds: 3), () {
             Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (_) => const LoginPage(),
+                builder: (_) => const AuthGate(),
               ), 
               (route) => false,
             );

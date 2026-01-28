@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
+import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/pages/login.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -146,7 +147,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   if (_loginFormKey.currentState!.validate()) {
                     // If the form is valid, display a snackbar. In the real world,
                     // you'd often call a server or save the information in a database.
-                    handleRegistration(
+                    handleFirebaseRegistration(
                       context: context,
                       formKey: _loginFormKey,
                       firebaseAuth: FirebaseAuth.instance,
@@ -185,9 +186,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => const LoginPage()),
+                        (route) => false,
                       );
                     },
                     child: const Text(
@@ -211,7 +213,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 }
 
 
-Future<void> handleRegistration({
+Future<void> handleFirebaseRegistration({
   required BuildContext context,
   required GlobalKey<FormState> formKey,
   required FirebaseAuth firebaseAuth,
@@ -234,10 +236,11 @@ Future<void> handleRegistration({
       );
 
       Future.delayed(const Duration(seconds: 3), () {
-        Navigator.of(context, rootNavigator: true).push(
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (_) => const LoginPage(),
-          ),
+            builder: (_) => const HomePage(),
+          ), 
+          (route) => false,
         );
       });
 

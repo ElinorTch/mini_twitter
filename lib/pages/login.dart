@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/auth_gate.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
+import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/pages/registration.dart';
 
 class LoginPage extends StatefulWidget {
@@ -125,12 +128,15 @@ class _LoginPageState extends State<LoginPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  // Validate returns true if the form is valid, or false otherwise.
                   if (_loginFormKey.currentState!.validate()) {
-                    // If the form is valid, display a snackbar. In the real world,
-                    // you'd often call a server or save the information in a database.
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Email: ${emailController.text} and password:${passwordController.text}')),
+                    handleLogin(
+                      context: context, 
+                      formKey: _loginFormKey, 
+                      firebaseAuth: FirebaseAuth.instance, 
+                      email: emailController.text, 
+                      password: passwordController.text, 
+                      isLoading: _isLoading, 
+                      setLoading: setLoading
                     );
                   }
                 },
@@ -187,4 +193,48 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+Future<void> handleLogin({
+  required BuildContext context,
+  required GlobalKey<FormState> formKey,
+  required FirebaseAuth firebaseAuth,
+  required String email,
+  required String password,
+  required bool isLoading,
+  required void Function(bool) setLoading,
+}) async {
+  if (isLoading) return;
 
+  String message = '';
+  if (formKey.currentState!.validate()) {
+    setLoading(true);
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Future.delayed(const Duration(seconds: 3), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Connexion successfull !')),
+        );
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (_) => const AuthGate(),
+          ),
+          (route) => false,
+        );
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+        message = 'Invalid login credentials.';
+      } else {
+        message = e.code;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to sign in: $message')),
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+}
