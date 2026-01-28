@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:mini_twitter/auth_gate.dart';
 import 'package:mini_twitter/pages/login.dart';
+import 'package:mini_twitter/pages/logout.dart';
 import 'firebase_options.dart';
-import 'package:mini_twitter/tab/navigation_bar.dart';
+import 'package:mini_twitter/components/navigation/navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async{
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
           indicatorColor: Colors.transparent,
         ),
       ),
-      home: const LoginPage(),
+      home: const AuthGate(),
     );
   }
 }
@@ -54,7 +56,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     Text( 'Home Page' ),
     Text( 'Post Page' ),
-    Text( 'Profil Page' ),
+    // Text( 'Profile Page' ),
+    LogoutButton(),
   ];
 
   @override
