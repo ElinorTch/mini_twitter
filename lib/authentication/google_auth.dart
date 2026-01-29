@@ -38,10 +38,21 @@ class GoogleAuthButton extends StatelessWidget {
       ),
       onPressed: () => signInWithGoogle(context),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.headphones),
-          SizedBox(width: 2),
-          Text('Google')
+          Image.asset(
+            'assets/logos/google.png',
+            height: 22,
+            width: 22,
+          ),
+          SizedBox(width: 5),
+          Text(
+            'Google', 
+            style: TextStyle(
+              color: Color(0xFF000000),
+              fontWeight: FontWeight.bold,
+            )
+          ),
         ],
       ),
     );

@@ -37,8 +37,6 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
-
               const Text(
                 'Welcome Back',
                 style: TextStyle(
@@ -154,15 +152,19 @@ class _LoginPageState extends State<LoginPage> {
                     ),
               ),
 
+              const SizedBox(height: 20),
+
               Divider(
                 height: 40,
                 thickness: 1,
                 color: Color(0xFFD1D5DB),
               ),
 
+              const SizedBox(height: 20),
+
               GoogleAuthButton(),
 
-              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
