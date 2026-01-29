@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mini_twitter/models/user.dart';
 
 class UserService {
   final users = FirebaseFirestore.instance.collection('users');
@@ -19,10 +20,10 @@ class UserService {
     });
   }
 
-  Future<User?> getUserById(String uid) async {
+  Future<UserModel?> getUserById(String uid) async {
     DocumentSnapshot doc = await users.doc(uid).get();
     if (!doc.exists) return null;
-    return doc.data() as User;
+    return UserModel.fromMap(doc.data() as Map<String, dynamic>, uid);
   }
 
   Future<bool> pseudoExists(String pseudo) async {

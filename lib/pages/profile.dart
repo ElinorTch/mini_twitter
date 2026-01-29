@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/services/user_service.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,13 +16,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
 
   UserService userService = UserService();
-  late User? userInfo;
+  UserModel? userInfo;
 
   Future<void> _loadUserInfo() async {
     final currentUser = await userService.getCurrentUser();
 
     final userInfo = widget.userId == null
-        ? currentUser
+        ? await userService.getUserById(currentUser.uid)
         : await userService.getUserById(widget.userId!);
 
     setState(() {
@@ -38,6 +39,12 @@ class _ProfilePageState extends State<ProfilePage> {
   
   @override
   Widget build(BuildContext context) {
+    if (userInfo == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -59,9 +66,31 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Text('User Profile Page'),
-      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 30, right: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/images/user.png'),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                '@${userInfo!.pseudo}',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
