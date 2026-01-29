@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/main.dart';
-import 'package:mini_twitter/pages/login.dart';
+import 'package:mini_twitter/authentication/login.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});

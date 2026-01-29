@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/main.dart';
-import 'package:mini_twitter/pages/login.dart';
+import 'package:mini_twitter/authentication/login.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
