@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/authentication/auth_gate.dart';
 import 'package:mini_twitter/authentication/logout.dart';
+import 'package:mini_twitter/pages/profile.dart';
 import 'firebase_options.dart';
 import 'package:mini_twitter/components/navigation/navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,9 +55,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     Text( 'Home Page' ),
-    Text( 'Post Page' ),
-    // Text( 'Profile Page' ),
     LogoutButton(),
+    ProfilePage(),
   ];
 
   @override

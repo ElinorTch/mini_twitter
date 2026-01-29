@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mini_twitter/services/user_service.dart';
 
 class GoogleAuthButton extends StatelessWidget {
   const GoogleAuthButton({super.key});
@@ -8,6 +9,8 @@ class GoogleAuthButton extends StatelessWidget {
   Future<dynamic> signInWithGoogle(
       BuildContext context
   ) async {
+    UserService userService = UserService();
+
     try {
       GoogleSignIn.instance.initialize(serverClientId: '599906860098-oqskkgvgcu762lom827aneenjbdmvinr.apps.googleusercontent.com');
       final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
@@ -19,8 +22,19 @@ class GoogleAuthButton extends StatelessWidget {
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
       final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
-
-      return await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      
+      if (user != null) {
+        final bool exists = await userService.pseudoExists(user.email!.split('@')[0]);
+        if (!exists) {
+          await userService.createUser(
+            user.uid,
+            user.email!,
+            user.email!.split('@')[0],
+          );
+        }
+      }
     } catch (e) {
       print("Error caught: $e");
     }

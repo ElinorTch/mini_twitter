@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/authentication/login.dart';
+import 'package:mini_twitter/services/user_service.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -16,7 +17,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   bool _isLoading = false;
 
   final emailController = TextEditingController();
-  final pseudoController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final passwordController = TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
 
@@ -65,21 +66,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Column(
                   children: <Widget>[
                     LabeledFormInput(
-                      label: 'Pseudo', 
-                      hint: 'Enter your pseudo', 
-                      controller: pseudoController, 
-                      keyboardType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter a valid pseudo';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    LabeledFormInput(
                       label: 'Email', 
                       hint: 'Enter your email', 
                       controller: emailController, 
@@ -102,6 +88,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Enter a password';
+                        }
+                        return null;
+                      },
+                      iconButton: IconButton(
+                        icon: Icon(
+                          _obscure ? Icons.visibility_off : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscure = !_obscure;
+                          });
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    LabeledFormInput(
+                      label: 'Confirm password', 
+                      hint: 'Confirm your password', 
+                      controller: confirmPasswordController, 
+                      obscure: _obscure,
+                      validator: (value) {
+                        if (value == null || value.isEmpty || value != passwordController.text) {
+                          return 'Your password doesn\'t match';
                         }
                         return null;
                       },
@@ -224,16 +236,31 @@ Future<void> handleFirebaseRegistration({
 }) async {
   if (isLoading) return;
 
+  UserService userService = UserService();
+
   String message = 'Configuration error. Please try again.';
 
   if (formKey.currentState!.validate()) {
     setLoading(true);
 
     try {
-      await firebaseAuth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        final bool exists = await userService.pseudoExists(user.email!.split('@')[0]);
+        if (!exists) {
+          await userService.createUser(
+            user.uid,
+            user.email!,
+            user.email!.split('@')[0],
+          );
+        }
+      }
 
       Future.delayed(const Duration(seconds: 3), () {
         Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
