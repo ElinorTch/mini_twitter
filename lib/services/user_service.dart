@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserService {
   final users = FirebaseFirestore.instance.collection('users');
+
+  Future<User> getCurrentUser() async {
+    return FirebaseAuth.instance.currentUser!;
+  }
 
   Future<void> createUser(String uid, String email, String pseudo) async {
     await users.doc(uid).set({
@@ -12,6 +17,12 @@ class UserService {
       'following': [],
       'joinedAt': FieldValue.serverTimestamp(),
     });
+  }
+
+  Future<User?> getUserById(String uid) async {
+    DocumentSnapshot doc = await users.doc(uid).get();
+    if (!doc.exists) return null;
+    return doc.data() as User;
   }
 
   Future<bool> pseudoExists(String pseudo) async {

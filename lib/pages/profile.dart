@@ -1,8 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/services/user_service.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfilePage extends StatefulWidget {
+  final String? userId; 
 
+  const ProfilePage({super.key, this.userId});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+
+class _ProfilePageState extends State<ProfilePage> {
+
+  UserService userService = UserService();
+  late User? userInfo;
+
+  Future<void> _loadUserInfo() async {
+    final currentUser = await userService.getCurrentUser();
+
+    final userInfo = widget.userId == null
+        ? currentUser
+        : await userService.getUserById(widget.userId!);
+
+    setState(() {
+      this.userInfo = userInfo;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,14 +59,9 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [];
-        },
-        body: Center(
-          child: Text('Profile Page Content'),
-        ),
-      )
+      body: Center(
+        child: Text('User Profile Page'),
+      ),
     );
   }
 }
