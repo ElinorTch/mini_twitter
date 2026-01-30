@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/authentication/google_auth.dart';
 import 'package:mini_twitter/authentication/registration.dart';
@@ -123,34 +124,19 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: () {
-                  if (_loginFormKey.currentState!.validate()) {
-                    handleLogin(
-                      context: context, 
-                      formKey: _loginFormKey, 
-                      firebaseAuth: FirebaseAuth.instance, 
-                      email: emailController.text, 
-                      password: passwordController.text, 
-                      isLoading: _isLoading, 
-                      setLoading: setLoading
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF137FEC),
-                  minimumSize: const Size.fromHeight(60),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: _isLoading 
-                  ? const CircularProgressIndicator(color: Colors.white) 
-                  : const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-              ),
+              PrimaryButton(label: 'Login', isLoading: _isLoading, onPressed: (){
+                if (_loginFormKey.currentState!.validate()) {
+                  handleLogin(
+                    context: context, 
+                    formKey: _loginFormKey, 
+                    firebaseAuth: FirebaseAuth.instance, 
+                    email: emailController.text, 
+                    password: passwordController.text, 
+                    isLoading: _isLoading, 
+                    setLoading: setLoading
+                  );
+                }
+              }),
 
               const SizedBox(height: 20),
 

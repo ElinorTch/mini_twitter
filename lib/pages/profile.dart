@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mini_twitter/components/button.dart';
+import 'package:mini_twitter/components/follow_card.dart';
 import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/services/user_service.dart';
 
@@ -46,7 +49,9 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         centerTitle: true,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
@@ -61,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
-              // your action here
+              
             },
           ),
         ],
@@ -69,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(left: 30, right: 30),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
             Center(
@@ -79,15 +84,65 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: Text(
-                '@${userInfo!.pseudo}',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+            Text(
+              '@${userInfo!.pseudo}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              '${userInfo!.bio}',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.calendar_month, size: 16, color: Colors.grey),
+                SizedBox(width: 5),
+                Text(
+                  'Joined ${DateFormat('MMMM yyyy').format(userInfo!.joinedAt)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: FollowCard(
+                    title: '128',
+                    subtitle: 'POSTS',
+                  ),
+                ),
+                SizedBox(width: 5),
+                Expanded(
+                  child: FollowCard(
+                    title: userInfo!.following.length.toString(),
+                    subtitle: 'FOLLOWING',
+                  ),
+                ),
+                SizedBox(width: 5),
+                Expanded(
+                  child: FollowCard(
+                    title: userInfo!.followers.length.toString(),
+                    subtitle: 'FOLLOWERS',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
           ],
         ),
       )

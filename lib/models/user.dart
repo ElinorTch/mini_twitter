@@ -8,7 +8,7 @@ class UserModel {
   final String? bio;
   final List<String> followers;
   final List<String> following;
-  final DateTime createdAt;
+  final DateTime joinedAt;
 
   UserModel({
     required this.uid,
@@ -18,7 +18,7 @@ class UserModel {
     this.bio,
     required this.followers,
     required this.following,
-    required this.createdAt,
+    required this.joinedAt,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String documentId) {
@@ -30,7 +30,7 @@ class UserModel {
       bio: map['bio'],
       followers: List<String>.from(map['followers'] ?? []),
       following: List<String>.from(map['following'] ?? []),
-      createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      joinedAt: (map['joinedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -42,7 +42,7 @@ class UserModel {
       'bio': bio,
       'followers': followers,
       'following': following,
-      'createdAt': createdAt,
+      'joinedAt': joinedAt,
     };
   }
 
@@ -62,7 +62,7 @@ class UserModel {
       bio: bio ?? this.bio,
       followers: followers ?? this.followers,
       following: following ?? this.following,
-      createdAt: createdAt,
+      joinedAt: joinedAt,
     );
   }
 }

@@ -13,7 +13,7 @@ class UserService {
     await users.doc(uid).set({
       'email': email,
       'pseudo': pseudo,
-      'aboutMe': 'This section is meant to be my bio...',
+      'bio': 'This section is meant to be my bio...',
       'followers': [],
       'following': [],
       'joinedAt': FieldValue.serverTimestamp(),
