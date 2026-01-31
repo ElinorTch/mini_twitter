@@ -148,6 +148,23 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
             PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
+            const SizedBox(height: 20),
+            DefaultTabController(
+              length: 3, 
+              child: TabBar(
+                labelColor: Color(0xFF137FEC),
+                unselectedLabelColor: Colors.grey,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                tabs: [
+                  Tab(text: 'Posts'),
+                  Tab(text: 'Media'),
+                  Tab(text: 'Likes'),
+                ],
+              ),
+            )
           ],
         ),
       )
