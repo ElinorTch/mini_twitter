@@ -5,7 +5,7 @@ import 'package:mini_twitter/models/user.dart';
 class UserService {
   final users = FirebaseFirestore.instance.collection('users');
 
-  Future<User> getCurrentUser() async {
+  Future<User?> getCurrentUser() async {
     return FirebaseAuth.instance.currentUser!;
   }
 

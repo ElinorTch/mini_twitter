@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/follow_card.dart';
 import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId; 
@@ -21,11 +23,11 @@ class _ProfilePageState extends State<ProfilePage> {
   UserService userService = UserService();
   UserModel? userInfo;
 
-  Future<void> _loadUserInfo() async {
+  Future<void> _loadUserInfo(CurrentUserProvider provider) async {
     final currentUser = await userService.getCurrentUser();
 
     final userInfo = widget.userId == null
-        ? await userService.getUserById(currentUser.uid)
+        ? provider.currentUser
         : await userService.getUserById(widget.userId!);
 
     setState(() {
@@ -36,12 +38,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
   }
 
   
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<CurrentUserProvider>();
+    _loadUserInfo(provider);
+
     if (userInfo == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),

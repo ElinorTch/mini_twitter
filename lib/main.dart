@@ -4,6 +4,8 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/authentication/auth_gate.dart';
 import 'package:mini_twitter/authentication/logout.dart';
 import 'package:mini_twitter/pages/profile.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:mini_twitter/components/navigation/navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +21,14 @@ void main() async{
     EmailAuthProvider(),
   ]);
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CurrentUserProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

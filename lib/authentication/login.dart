@@ -218,8 +218,6 @@ Future<void> handleLogin({
         SnackBar(content: Text('Failed to sign in: $message')),
       );
       setLoading(false);
-    } finally {
-      // setLoading(false);
     }
   }
 }
