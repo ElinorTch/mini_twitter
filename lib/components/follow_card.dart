@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class FollowCard extends StatelessWidget {
   final String title;
   final String subtitle;
+  final Color textColor;
 
   const FollowCard({
     super.key,
     required this.title,
     required this.subtitle,
+    this.textColor = Colors.black,
   });
 
   @override
@@ -29,9 +31,10 @@ class FollowCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
+                color: textColor,
               ),
             ),
             const SizedBox(height: 4),

@@ -127,6 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: FollowCard(
                     title: '128',
                     subtitle: 'POSTS',
+                    textColor: Color(0xFF137FEC),
                   ),
                 ),
                 SizedBox(width: 5),
