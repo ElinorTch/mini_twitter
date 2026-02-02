@@ -15,7 +15,7 @@ class UserService {
     return FirebaseAuth.instance.currentUser!;
   }
 
-  dynamic uploadUserProfilePhoto(UserModel? currentUser) async {
+  Future<String?> uploadUserProfilePhoto(UserModel? currentUser) async {
     XFile? image = await imageService.pickImageFromGallery();
 
     if (image != null && currentUser != null) {
@@ -39,6 +39,12 @@ class UserService {
       'followers': [],
       'following': [],
       'joinedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> updateProfilePhoto(String uid, String photoUrl) async {
+    await users.doc(uid).update({
+      'photoUrl': photoUrl,
     });
   }
 

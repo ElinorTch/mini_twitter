@@ -83,12 +83,19 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             Center(
               child: GestureDetector(
-                onTap: () {
-                  userService.uploadUserProfilePhoto(userInfo);
+                onTap: () async {
+                  final profileUrl = await userService.uploadUserProfilePhoto(userInfo);
+                  final url = "$profileUrl?v=${DateTime.now().millisecondsSinceEpoch}";
+                  if (profileUrl != null && userInfo != null) {
+                    userService.updateProfilePhoto(userInfo!.uid, url);
+                    provider.refreshUser();
+                  }
                 },
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: AssetImage('assets/images/user.png'),
+                  backgroundImage: userInfo?.photoUrl != null 
+                  ? NetworkImage(userInfo!.photoUrl!)
+                  : AssetImage('assets/images/user.png'),
                 ),
               )
             ),
