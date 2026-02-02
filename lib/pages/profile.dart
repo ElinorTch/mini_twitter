@@ -82,10 +82,15 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             const SizedBox(height: 20),
             Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/user.png'),
-              ),
+              child: GestureDetector(
+                onTap: () {
+                  userService.uploadUserProfilePhoto(userInfo);
+                },
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('assets/images/user.png'),
+                ),
+              )
             ),
             const SizedBox(height: 20),
             Text(
