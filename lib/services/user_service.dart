@@ -1,12 +1,34 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/services/image_service.dart';
 
 class UserService {
+  final imageService = ImageService();
   final users = FirebaseFirestore.instance.collection('users');
 
   Future<User?> getCurrentUser() async {
     return FirebaseAuth.instance.currentUser!;
+  }
+
+  Future<String?> uploadUserProfilePhoto(UserModel? currentUser) async {
+    XFile? image = await imageService.pickImageFromGallery();
+
+    if (image != null && currentUser != null) {
+      final storageRef = FirebaseStorage.instance.ref();
+      final profileImageRef = storageRef.child('users/${currentUser.uid}/profile.jpg');
+      
+      File imageFile = File(image.path);
+      profileImageRef.putFile(imageFile);
+
+      return profileImageRef.getDownloadURL();
+    }
+
+    return null;
   }
 
   Future<void> createUser(String uid, String email, String pseudo) async {
@@ -17,6 +39,12 @@ class UserService {
       'followers': [],
       'following': [],
       'joinedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> updateProfilePhoto(String uid, String photoUrl) async {
+    await users.doc(uid).update({
+      'photoUrl': photoUrl,
     });
   }
 

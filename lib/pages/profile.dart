@@ -82,10 +82,22 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             const SizedBox(height: 20),
             Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('assets/images/user.png'),
-              ),
+              child: GestureDetector(
+                onTap: () async {
+                  final profileUrl = await userService.uploadUserProfilePhoto(userInfo);
+                  final url = "$profileUrl?v=${DateTime.now().millisecondsSinceEpoch}";
+                  if (profileUrl != null && userInfo != null) {
+                    userService.updateProfilePhoto(userInfo!.uid, url);
+                    provider.refreshUser();
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: userInfo?.photoUrl != null 
+                  ? NetworkImage(userInfo!.photoUrl!)
+                  : AssetImage('assets/images/user.png'),
+                ),
+              )
             ),
             const SizedBox(height: 20),
             Text(
@@ -148,6 +160,23 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
             PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
+            const SizedBox(height: 20),
+            DefaultTabController(
+              length: 3, 
+              child: TabBar(
+                labelColor: Color(0xFF137FEC),
+                unselectedLabelColor: Colors.grey,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                tabs: [
+                  Tab(text: 'Posts'),
+                  Tab(text: 'Media'),
+                  Tab(text: 'Likes'),
+                ],
+              ),
+            )
           ],
         ),
       )
