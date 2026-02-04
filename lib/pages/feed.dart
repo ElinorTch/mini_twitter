@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/pages/following_feed.dart';
 
 class FeedPage extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class FeedPage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     Center(child: Text('For You Feed, To come!!')),
-                    Center(child: Text('Following Feed')),
+                    FollowingFeed(),
                   ],
                 ),
               ),
