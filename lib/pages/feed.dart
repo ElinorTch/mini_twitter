@@ -5,6 +5,7 @@ class FeedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFf6f7f8),
       appBar: AppBar(
         centerTitle: true,
         title: Text('Community Feed'),
@@ -24,15 +25,15 @@ class FeedPage extends StatelessWidget {
             children: [
               TabBar(
                 tabs: [
-                  Tab(text: 'For You'),
                   Tab(text: 'Following'),
+                  Tab(text: 'For You'),
                 ],
               ),
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text('For You Feed, To come!!')),
                     FollowingFeed(),
+                    Center(child: Text('For You Feed, To come!!')),
                   ],
                 ),
               ),
