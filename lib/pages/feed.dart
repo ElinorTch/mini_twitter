@@ -33,8 +33,8 @@ class FeedPage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     FollowingFeed(),
-                    // Center(child: Text('For You Feed, To come!!')),
-                    Image.asset('assets/images/profile.png')
+                    Center(child: Text('For You Feed, To come!!')),
+                    // Image.asset('assets/images/profile.png')
                   ],
                 ),
               ),

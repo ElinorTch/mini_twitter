@@ -7,17 +7,29 @@ class FollowingFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+      body: ListView(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
           children: [
+            SizedBox(height: 16),
+            PostCard(),
+            SizedBox(height: 16),
+            PostCard(),
+            SizedBox(height: 16),
+            PostCard(),
+            SizedBox(height: 16),
+            PostCard(),
+            SizedBox(height: 16),
+            PostCard(),
+            SizedBox(height: 16),
+            PostCard(),
             SizedBox(height: 16),
             PostCard(),
             SizedBox(height: 16),
             PostCard(),
           ],
         ),
-      ),
+      
     );
   }
 }
