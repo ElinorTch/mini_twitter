@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
@@ -24,8 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? userInfo;
 
   Future<void> _loadUserInfo(CurrentUserProvider provider) async {
-    final currentUser = await userService.getCurrentUser();
-
     final userInfo = widget.userId == null
         ? provider.currentUser
         : await userService.getUserById(widget.userId!);

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/authentication/auth_gate.dart';
 import 'package:mini_twitter/authentication/logout.dart';
+import 'package:mini_twitter/pages/feed.dart';
 import 'package:mini_twitter/pages/profile.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController usernameController = TextEditingController();
 
   final List<Widget> _pages = [
-    Text( 'Home Page' ),
+    FeedPage(),
     LogoutButton(),
     ProfilePage(),
   ];
