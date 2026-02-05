@@ -15,9 +15,6 @@ class FollowingFeed extends StatelessWidget {
             PostCard(),
             SizedBox(height: 16),
             PostCard(),
-            SizedBox(height: 16),
-            PostCard(),
-            
           ],
         ),
       ),

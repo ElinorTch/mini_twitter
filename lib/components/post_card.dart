@@ -24,10 +24,13 @@ class PostCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: 
+                  backgroundColor: Color(0xFFf6f7f8),
+                  
+                  // backgroundImage: 
                   // user.photoUrl != null 
                     // ? NetworkImage(user.photoUrl!)
-                    AssetImage('assets/images/user.png'),
+                  child: Image.asset('assets/images/person.png'),
+                  
                 ),
                 SizedBox(width: 10),
                 Column(
@@ -57,31 +60,38 @@ class PostCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    GestureDetector(
+                    InkWell(
+                      borderRadius: BorderRadius.circular(50),
                       onTap: () {
                         print("Icon clicked");
                       },
-                      child: Row(
-                        children: [
-                          Icon(Icons.favorite, size: 20, color: Color(0xFF617589)),
-                          SizedBox(width: 2),
-                          Text('10'),
-                        ],
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.favorite, size: 20, color: Color(0xFF617589)),
+                            SizedBox(width: 2),
+                            Text('10'),
+                          ],
+                        )
                       ),
                     ),
-                    SizedBox(width: 16),
-                    GestureDetector(
+                    InkWell(
+                      borderRadius: BorderRadius.circular(50),
                       onTap: () {
                         print("Icon clicked");
                       },
-                      child: Row(
-                        children: [
-                          Icon(Icons.comment, size: 20, color: Color(0xFF617589)),
-                          SizedBox(width: 2),
-                          Text('10'),
-                        ],
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.comment, size: 20, color: Color(0xFF617589)),
+                            SizedBox(width: 2),
+                            Text('10'),
+                          ],
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
                 IconButton(
