@@ -35,6 +35,10 @@ class _FollowingFeedState extends State<FollowingFeed> {
 
     final fetchedPosts = await postService.getFollowingPosts(following);
 
+    for (final post in fetchedPosts) {
+      await userService.getUser(post.userId);
+    }
+
     setState(() {
       posts = fetchedPosts;
       isLoading = false;
@@ -57,28 +61,21 @@ class _FollowingFeedState extends State<FollowingFeed> {
 // const Center(child: Text("Aucun post pour le moment"));
     }
 
-    return ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
+    return RefreshIndicator(
+      onRefresh: loadPosts,
+      child: ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(),
         itemCount: posts.length,
         itemBuilder: (context, index) {
           final post = posts[index];
+          final user = userService.usersCache[post.userId]!;
 
-          return FutureBuilder<UserModel>(
-            future: userService.getUser(post.userId),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return SizedBox(height: 0);
-              }
-
-              final user = snapshot.data!;
-
-              return PostCard(
-                post: post,
-                user: user,
-              );
-            },
+          return PostCard(
+            post: post,
+            user: user,
           );
         },
-      );
+      ),
+    );
   }
 }

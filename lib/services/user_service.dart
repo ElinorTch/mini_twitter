@@ -17,14 +17,15 @@ class UserService {
   }
 
   Future<UserModel> getUser(String userId) async {
-  if (usersCache.containsKey(userId)) {
-    return usersCache[userId]!;
-  }
+    if (usersCache.containsKey(userId)) {
+      return usersCache[userId]!;
+    }
 
-  final user = await getUserById(userId);
-  usersCache[userId] = user!;
-  return user;
-}
+    final user = await getUserById(userId);
+    print("Fetched user: ${user?.email}");
+    usersCache[userId] = user!;
+    return user;
+  }
 
   Future<String?> uploadUserProfilePhoto(UserModel? currentUser) async {
     XFile? image = await imageService.pickImageFromGallery();

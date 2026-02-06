@@ -2,9 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/authentication/login.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
 
 class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
+  CurrentUserProvider currentUser = CurrentUserProvider();
+  
+  AuthGate({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +21,7 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
+          currentUser.refreshUser();
           return const HomePage();
         }
         

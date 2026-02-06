@@ -33,7 +33,6 @@ class PostService {
     final postId = postRef.id;
 
     await postRef.set({
-      'id': postId,
       'userId': uid,
       'text': 'Mon premier post !', 
       'imageUrl': null,
@@ -51,7 +50,9 @@ class PostService {
     int limit = 10,
   }) async {
     if (!hasMore) return [];
-    
+
+    print("Fetching following posts for IDs: $followingIds");
+
     if (followingIds.isEmpty) return []; 
 
     Query query = posts
@@ -74,7 +75,7 @@ class PostService {
     }
 
     return snapshot.docs
-        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
         .toList();
   }
 }
