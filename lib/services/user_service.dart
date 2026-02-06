@@ -10,10 +10,21 @@ import 'package:mini_twitter/services/image_service.dart';
 class UserService {
   final imageService = ImageService();
   final users = FirebaseFirestore.instance.collection('users');
+  Map<String, UserModel> usersCache = {};
 
   Future<User?> getCurrentUser() async {
     return FirebaseAuth.instance.currentUser!;
   }
+
+  Future<UserModel> getUser(String userId) async {
+  if (usersCache.containsKey(userId)) {
+    return usersCache[userId]!;
+  }
+
+  final user = await getUserById(userId);
+  usersCache[userId] = user!;
+  return user;
+}
 
   Future<String?> uploadUserProfilePhoto(UserModel? currentUser) async {
     XFile? image = await imageService.pickImageFromGallery();

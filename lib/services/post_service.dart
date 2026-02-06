@@ -51,7 +51,7 @@ class PostService {
     int limit = 10,
   }) async {
     if (!hasMore) return [];
-
+    
     if (followingIds.isEmpty) return []; 
 
     Query query = posts
