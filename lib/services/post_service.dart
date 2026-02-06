@@ -8,7 +8,9 @@ import 'package:mini_twitter/services/image_service.dart';
 
 class PostService {
   final imageService = ImageService();
-  final users = FirebaseFirestore.instance.collection('posts');
+  final posts = FirebaseFirestore.instance.collection('posts');
+  DocumentSnapshot? lastDoc;
+  bool hasMore = true;
 
   Future<String?> uploadPostPhoto(PostModel? currentPost) async {
     XFile? image = await imageService.pickImageFromGallery();
@@ -44,9 +46,35 @@ class PostService {
     return postId;
   }
 
-  Future<void> updateProfilePhoto(String uid, String photoUrl) async {
-    await users.doc(uid).update({
-      'photoUrl': photoUrl,
-    });
+  Future<List<PostModel>> getFollowingPosts(
+    List<String> followingIds, {
+    int limit = 10,
+  }) async {
+    if (!hasMore) return [];
+
+    if (followingIds.isEmpty) return []; 
+
+    Query query = posts
+        .where('userId', whereIn: followingIds)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+
+    if (lastDoc != null) {
+      query = query.startAfterDocument(lastDoc!);
+    }
+
+    final snapshot = await query.get();
+
+    if (snapshot.docs.isNotEmpty) {
+      lastDoc = snapshot.docs.last;
+    }
+
+    if (snapshot.docs.length < limit) {
+      hasMore = false;
+    }
+
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 }

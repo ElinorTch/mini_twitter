@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/helpers/date_helper.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
 
 class PostCard extends StatelessWidget {
-  // final UserModel user;
-  // final PostModel post;
+  final UserModel user;
+  final PostModel post;
 
   const PostCard({
     super.key,
-    // required this.user,
-    // required this.post,
+    required this.user,
+    required this.post,
   });
 
   @override
@@ -25,31 +26,31 @@ class PostCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundColor: Color(0xFFf6f7f8),
-                  
-                  // backgroundImage: 
-                  // user.photoUrl != null 
-                    // ? NetworkImage(user.photoUrl!)
-                  child: Image.asset('assets/images/person.png'),
-                  
+                  backgroundImage: user.photoUrl != null
+                    ? NetworkImage(user.photoUrl!)
+                    : null,
+                  child: user.photoUrl == null
+                    ? Image.asset('assets/images/person.png')
+                    : null,
                 ),
                 SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Pseudo", style: TextStyle(color: Color(0xFF111418), fontWeight: FontWeight.bold)),
+                    Text(user.pseudo, style: TextStyle(color: Color(0xFF111418), fontWeight: FontWeight.bold)),
                     SizedBox(height: 4),
-                    Text('2h ago', style: TextStyle(color: Color(0xFF617589), fontSize: 12)),
+                    Text(timeAgo(post.createdAt), style: TextStyle(color: Color(0xFF617589), fontSize: 12)),
                   ]
                 )
               ],
             ),
-            // if (post.imageUrl != null) ...[
-            //   SizedBox(height: 8),
-            //   Image.network(post.imageUrl!),
-            // ],
+            if (post.imageUrl != null) ...[
+              SizedBox(height: 8),
+              Image.network(post.imageUrl!),
+            ],
             SizedBox(height: 8),
             Text(
-              "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+              post.text,
               style: TextStyle(color: Color(0xFF111418), fontWeight: FontWeight.w500),
             ),
             
