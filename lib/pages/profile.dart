@@ -86,6 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (profileUrl != null && userInfo != null) {
                     userService.updateProfilePhoto(userInfo!.uid, url);
                   }
+
                 },
                 child: CircleAvatar(
                   radius: 50,
