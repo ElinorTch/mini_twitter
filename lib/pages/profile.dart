@@ -27,23 +27,27 @@ class _ProfilePageState extends State<ProfilePage> {
         ? provider.currentUser
         : await userService.getUserById(widget.userId!);
 
-    setState(() {
-      this.userInfo = userInfo;
-    });
+    if(mounted) {
+      setState(() {
+        this.userInfo = userInfo;
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    
+    final provider = context.read<CurrentUserProvider>();
+    _loadUserInfo(provider);
   }
 
   
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
-    _loadUserInfo(provider);
 
-    if (userInfo == null) {
+    if (provider.isLoading && userInfo == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );

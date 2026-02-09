@@ -61,6 +61,7 @@ class UserService {
   }
 
   Future<UserModel?> getUserById(String uid) async {
+    print("Getting user by ID: $uid");
     DocumentSnapshot doc = await users.doc(uid).get();
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data() as Map<String, dynamic>, uid);
