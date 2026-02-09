@@ -1,36 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/services/user_service.dart';
 
 class CurrentUserProvider extends ChangeNotifier {
   final UserService _userService = UserService();
-
   UserModel? _currentUser;
+  bool _isLoading = true;
+
   UserModel? get currentUser => _currentUser;
+  bool get isLoading => _isLoading;
 
   CurrentUserProvider() {
-    _loadUser();
-  }
-
-  Future<void> _loadUser() async {
-    try {
-      final firebaseUser = await _userService.getCurrentUser();
+    FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
+      _isLoading = true;
+      notifyListeners();
 
       if (firebaseUser == null) {
         _currentUser = null;
-        notifyListeners();
-        return;
+      } else {
+        _currentUser = await _userService.getUserById(firebaseUser.uid);
       }
 
-      _currentUser = await _userService.getUserById(firebaseUser.uid);
-    } catch (e) {
-      print("Error loading current user: $e");
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> refreshUser() async {
-    await _loadUser();
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 }

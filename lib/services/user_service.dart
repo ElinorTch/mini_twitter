@@ -75,27 +75,4 @@ class UserService {
 
     return query.docs.isNotEmpty; 
   }
-
-
-  // ➕ Follow
-  Future<void> follow(String currentUserId, String targetUserId) async {
-    await users.doc(targetUserId).update({
-      'followers': FieldValue.arrayUnion([currentUserId])
-    });
-
-    await users.doc(currentUserId).update({
-      'following': FieldValue.arrayUnion([targetUserId])
-    });
-  }
-
-  // ➖ Unfollow
-  Future<void> unfollow(String currentUserId, String targetUserId) async {
-    await users.doc(targetUserId).update({
-      'followers': FieldValue.arrayRemove([currentUserId])
-    });
-
-    await users.doc(currentUserId).update({
-      'following': FieldValue.arrayRemove([targetUserId])
-    });
-  }
 }

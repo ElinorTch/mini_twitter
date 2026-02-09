@@ -5,7 +5,7 @@ import 'package:mini_twitter/authentication/login.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 
 class AuthGate extends StatelessWidget {
-  CurrentUserProvider currentUser = CurrentUserProvider();
+  final CurrentUserProvider currentUser = CurrentUserProvider();
   
   AuthGate({super.key});
 
@@ -21,7 +21,6 @@ class AuthGate extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          currentUser.refreshUser();
           return const HomePage();
         }
         

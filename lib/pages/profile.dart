@@ -85,7 +85,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   final url = "$profileUrl?v=${DateTime.now().millisecondsSinceEpoch}";
                   if (profileUrl != null && userInfo != null) {
                     userService.updateProfilePhoto(userInfo!.uid, url);
-                    provider.refreshUser();
                   }
                 },
                 child: CircleAvatar(
