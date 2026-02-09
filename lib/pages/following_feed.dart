@@ -33,11 +33,11 @@ class _FollowingFeedState extends State<FollowingFeed> {
 
     print("User is following: ${currentUser.currentUser}");
 
-    final fetchedPosts = await postService.getFollowingPosts(following);
+    final fetchedPosts = await postService.getMyPosts(currentUser.currentUser!.uid);
 
-    for (final post in fetchedPosts) {
-      await userService.getUser(post.userId);
-    }
+    // for (final post in fetchedPosts) {
+    //   await userService.getUser(post.userId);
+    // }
 
     setState(() {
       posts = fetchedPosts;
