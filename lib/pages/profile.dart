@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/follow_card.dart';
-import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/user_service.dart';
 import 'package:provider/provider.dart';
@@ -20,26 +19,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
 
   UserService userService = UserService();
-  UserModel? userInfo;
-
-  Future<void> _loadUserInfo(CurrentUserProvider provider) async {
-    final userInfo = widget.userId == null
-        ? provider.currentUser
-        : await userService.getUserById(widget.userId!);
-
-    if(mounted) {
-      setState(() {
-        this.userInfo = userInfo;
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    
-    final provider = context.read<CurrentUserProvider>();
-    _loadUserInfo(provider);
   }
 
   
@@ -47,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
 
-    if (provider.isLoading && userInfo == null) {
+    if (provider.currentUser == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -85,23 +68,23 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: GestureDetector(
                 onTap: () async {
-                  final profileUrl = await userService.uploadUserProfilePhoto(userInfo);
+                  final profileUrl = await userService.uploadUserProfilePhoto(provider.currentUser);
                   final url = "$profileUrl?v=${DateTime.now().millisecondsSinceEpoch}";
-                  if (profileUrl != null && userInfo != null) {
-                    userService.updateProfilePhoto(userInfo!.uid, url);
+                  if (profileUrl != null) {
+                    userService.updateProfilePhoto(provider.currentUser!.uid, url);
                   }
                 },
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: userInfo?.photoUrl != null 
-                  ? NetworkImage(userInfo!.photoUrl!)
+                  backgroundImage: provider.currentUser?.photoUrl != null 
+                  ? NetworkImage(provider.currentUser!.photoUrl!)
                   : AssetImage('assets/images/user.png'),
                 ),
               )
             ),
             const SizedBox(height: 20),
             Text(
-              '@${userInfo!.pseudo}',
+              '@${provider.currentUser?.pseudo}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -110,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 10),
             Text(
-              '${userInfo!.bio}',
+              '${provider.currentUser?.bio}',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -123,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icon(Icons.calendar_month, size: 16, color: Colors.grey),
                 SizedBox(width: 5),
                 Text(
-                  'Joined ${DateFormat('MMMM yyyy').format(userInfo!.joinedAt)}',
+                  'Joined ${DateFormat('MMMM yyyy').format(provider.currentUser!.joinedAt)}',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -145,14 +128,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(width: 5),
                 Expanded(
                   child: FollowCard(
-                    title: userInfo!.following.length.toString(),
+                    title: provider.currentUser!.following.length.toString(),
                     subtitle: 'FOLLOWING',
                   ),
                 ),
                 SizedBox(width: 5),
                 Expanded(
                   child: FollowCard(
-                    title: userInfo!.followers.length.toString(),
+                    title: provider.currentUser!.followers.length.toString(),
                     subtitle: 'FOLLOWERS',
                   ),
                 ),
