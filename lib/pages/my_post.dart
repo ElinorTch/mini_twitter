@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/components/post_card.dart';
+import 'package:mini_twitter/models/post.dart';
+import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
 
 class MyPostPage extends StatelessWidget {
-  const MyPostPage({super.key});
+  final List<PostModel> posts;
+  final UserModel? userInfo;
+  final CurrentUserProvider currentUserProvider = CurrentUserProvider();
+
+  MyPostPage({
+    super.key,
+    required this.posts,
+    required this.userInfo,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Posts"),
-      ),
-      body: const Center(
-        child: Text("This is the My Posts page."),
-      ),
+    if (posts.isEmpty) {
+      return const Center(
+        child: Text(
+          "No posts yet",
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: posts.length,
+      itemBuilder: (context, index) {
+        final post = posts[index];
+
+        return PostCard(
+          post: post,
+          user: userInfo ?? currentUserProvider.currentUser!,
+        );
+      },
     );
+
   }
 }

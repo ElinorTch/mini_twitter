@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
-import 'package:mini_twitter/components/follow_card.dart';
 import 'package:mini_twitter/components/profile_info.dart';
+import 'package:mini_twitter/models/post.dart';
+import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/pages/my_post.dart';
+// import 'package:mini_twitter/pages/my_post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/services/post_service.dart';
 import 'package:mini_twitter/services/user_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,12 +21,41 @@ class ProfilePage extends StatefulWidget {
 
 
 class _ProfilePageState extends State<ProfilePage> {
-
+  List<PostModel> posts = [];
+  UserModel? userInfo;
+  PostService postService = PostService();
   UserService userService = UserService();
+  CurrentUserProvider currentUserProvider = CurrentUserProvider();
+
+  // Future<void> getUserPosts() async {
+  //   final provider = context.watch<CurrentUserProvider>();
+  //   final uid = widget.userId ?? provider.currentUser!.uid;
+  //   final userPosts = await postService.getMyPosts(uid);
+    
+  //   if (mounted) {
+  //     setState(() {
+  //       posts = userPosts;
+  //     });
+  //   };
+  // }
+
+  // Future<void> getUserData() async {
+  //   if (widget.userId != null) {
+  //     final user = await userService.getUserById(widget.userId!);
+  //     if (mounted) {
+  //       setState(() {
+  //         userInfo = user;
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // getUserData();
+    });
   }
 
   
@@ -93,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 1000, 
                 child: TabBarView(
                   children: [
-                    Center(child: Text("Posts de l'utilisateur")),
+                    MyPostPage(posts: posts, userInfo: userInfo),
                     Center(child: Text("Photos / vidéos")),
                     Center(child: Text("Posts likés")),
                   ],
