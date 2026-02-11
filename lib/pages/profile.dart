@@ -32,12 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
   }
 
-  
+ 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
