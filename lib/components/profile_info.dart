@@ -82,7 +82,7 @@ class ProfileHeader extends StatelessWidget {
           children: [
             Expanded(
               child: FollowCard(
-                title: '128',
+                title: user.posts.length.toString(),
                 subtitle: 'POSTS',
                 textColor: const Color(0xFF137FEC),
               ),

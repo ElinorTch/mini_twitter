@@ -23,41 +23,62 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   List<PostModel> posts = [];
   UserModel? userInfo;
-  PostService postService = PostService();
-  UserService userService = UserService();
-  CurrentUserProvider currentUserProvider = CurrentUserProvider();
+  bool _isLoading = true;
 
-  // Future<void> getUserPosts() async {
-  //   final provider = context.watch<CurrentUserProvider>();
-  //   final uid = widget.userId ?? provider.currentUser!.uid;
-  //   final userPosts = await postService.getMyPosts(uid);
-    
-  //   if (mounted) {
-  //     setState(() {
-  //       posts = userPosts;
-  //     });
-  //   };
-  // }
-
-  // Future<void> getUserData() async {
-  //   if (widget.userId != null) {
-  //     final user = await userService.getUserById(widget.userId!);
-  //     if (mounted) {
-  //       setState(() {
-  //         userInfo = user;
-  //       });
-  //     }
-  //   }
-  // }
+  // Initialisez vos services ici
+  final PostService _postService = PostService();
+  final UserService _userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // getUserData();
-    });
+    // On utilise microtask pour s'assurer que le context est prêt
+    Future.microtask(() => _initialFetch());
   }
 
+  Future<void> _initialFetch() async {
+    final provider = context.read<CurrentUserProvider>();
+    
+    // 1. Déterminer l'ID de l'utilisateur (soit le profil visité, soit moi-même)
+    final uid = widget.userId ?? provider.currentUser?.uid;
+
+    if (uid == null) return;
+
+    // 2. Lancer les deux appels en parallèle pour gagner du temps
+    await Future.wait([
+      _fetchPosts(uid),
+      _fetchUserInfo(uid),
+    ]);
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchPosts(String uid) async {
+    print("Fetching posts for user ID: $uid");
+    final userPosts = await _postService.getMyPosts(uid);
+    print("Uid: $uid, posts récupérés: ${userPosts.length}");
+    if (mounted) {
+      setState(() => posts = userPosts);
+      print("les posts ont été récupérés : ${posts.length}");
+    }
+  }
+
+  Future<void> _fetchUserInfo(String uid) async {
+    // Si c'est mon propre profil, on a déjà les infos dans le provider
+    if (widget.userId == null) {
+      final provider = context.read<CurrentUserProvider>();
+      setState(() => userInfo = provider.currentUser);
+    } else {
+      final user = await _userService.getUserById(uid);
+      if (mounted) {
+        setState(() => userInfo = user);
+      }
+    }
+  }
   
   @override
   Widget build(BuildContext context) {

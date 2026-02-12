@@ -83,30 +83,35 @@ class PostService {
     String currentUserId, {
     int limit = 10,
   }) async {
-    if (!hasMore) return [];
+    // if (!hasMore) {
+    //   print("la fonction s'arrete hasmore");
+    //   return [];
+    // }
 
-    if (currentUserId.isEmpty) return [];
+    // if (currentUserId.isEmpty) return [];
 
     print("Fetching my posts");
 
     Query query = posts
-        .where('userId', isEqualTo: currentUserId) 
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+        .where('userId', isEqualTo: currentUserId);
+        // .orderBy('createdAt', descending: true);
+        // .limit(limit);
 
-    if (lastDoc != null) {
-      query = query.startAfterDocument(lastDoc!);
-    }
+    // if (lastDoc != null) {
+    //   query = query.startAfterDocument(lastDoc!);
+    // }
 
     final snapshot = await query.get();
 
-    if (snapshot.docs.isNotEmpty) {
-      lastDoc = snapshot.docs.last;
-    }
+    // if (snapshot.docs.isNotEmpty) {
+    //   lastDoc = snapshot.docs.last;
+    // }
 
-    if (snapshot.docs.length < limit) {
-      hasMore = false;
-    }
+    // if (snapshot.docs.length < limit) {
+    //   hasMore = false;
+    // }
+
+    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
 
     return snapshot.docs
         .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))

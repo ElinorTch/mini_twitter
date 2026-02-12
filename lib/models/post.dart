@@ -20,7 +20,7 @@ class PostModel {
   });
 
   factory PostModel.fromMap(Map<String, dynamic> map, String documentId) {
-    print(map);
+    print("Map du post model");
     return PostModel(
       uid: documentId,
       userId: map['userId'],
