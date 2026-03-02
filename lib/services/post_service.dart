@@ -83,17 +83,14 @@ class PostService {
     String currentUserId, {
     int limit = 10,
   }) async {
-    // if (!hasMore) {
-    //   print("la fonction s'arrete hasmore");
-    //   return [];
-    // }
+    // if (!hasMore) return [];
 
     // if (currentUserId.isEmpty) return [];
 
-    print("Fetching my posts");
+    // print("Fetching my posts");
 
     Query query = posts
-        .where('userId', isEqualTo: currentUserId);
+        .where('likes', isEqualTo: 5);
         // .orderBy('createdAt', descending: true);
         // .limit(limit);
 
