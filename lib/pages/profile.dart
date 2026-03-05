@@ -102,7 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverToBoxAdapter(
-                child: ProfileHeader(user: provider.currentUser!),// ton composant
+                child: ProfileHeader(
+                  user: provider.currentUser!,
+                ), 
               ),
               SliverPersistentHeader(
                 pinned: true,
@@ -111,66 +113,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     labelColor: Color(0xFF137FEC),
                     unselectedLabelColor: Colors.grey,
                     indicatorSize: TabBarIndicatorSize.tab,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
                     tabs: [
                       Tab(text: "Posts"),
                       Tab(text: "Media"),
-                      Tab(text: "Likes"),
+                      Tab(text: "Liked"),
                     ],
                   ),
                 ),
               ),
             ];
           },
-          body: TabBarView(
-            children: [
-              MyPostPage(posts: posts, userInfo: userInfo),
-              Center(child: Text("Photos / vidéos")),
-              Center(child: Text("Posts likés")),
-            ],
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TabBarView(
+              children: [
+                MyPostPage(posts: posts, userInfo: userInfo),
+                Center(child: Text("Photos / vidéos")),
+                Center(child: Text("Posts likés")),
+              ],
+            ),
           ),
-          // body: SingleChildScrollView(
-          //   padding: const EdgeInsets.only(left: 30, right: 30),
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     children: [
-          //       ProfileHeader(user: provider.currentUser!),
-
-          //       const SizedBox(height: 20),
-
-          //       PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
-
-          //       const SizedBox(height: 20),
-
-          //       TabBar(
-          //         labelColor: Color(0xFF137FEC),
-          //         unselectedLabelColor: Colors.grey,
-          //         indicatorSize: TabBarIndicatorSize.tab,
-          //         labelStyle: TextStyle(
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //         tabs: [
-          //           Tab(text: 'Posts'),
-          //           Tab(text: 'Media'),
-          //           Tab(text: 'Likes'),
-          //         ],
-          //       ),
-
-          //       SizedBox(
-          //         height: 1000,
-          //         child: TabBarView(
-          //           children: [
-          //             MyPostPage(posts: posts, userInfo: userInfo),
-          //             Center(child: Text("Photos / vidéos")),
-          //             Center(child: Text("Posts likés")),
-          //           ],
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // )
         ),
       ),
     );
