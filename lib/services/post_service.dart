@@ -79,7 +79,7 @@ class PostService {
         .toList();
   }
 
-  Future<List<PostModel>> getMyPosts(
+  Future<List<PostModel>> getMyLikedPosts(
     String currentUserId, {
     int limit = 10,
   }) async {
@@ -92,6 +92,42 @@ class PostService {
     Query query = posts
         .where('likes', isEqualTo: 5);
         // .orderBy('createdAt', descending: true);
+        // .limit(limit);
+
+    // if (lastDoc != null) {
+    //   query = query.startAfterDocument(lastDoc!);
+    // }
+
+    final snapshot = await query.get();
+
+    // if (snapshot.docs.isNotEmpty) {
+    //   lastDoc = snapshot.docs.last;
+    // }
+
+    // if (snapshot.docs.length < limit) {
+    //   hasMore = false;
+    // }
+
+    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
+
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .toList();
+  }
+
+  Future<List<PostModel>> getMyPosts(
+    String currentUserId, {
+    int limit = 10,
+  }) async {
+    // if (!hasMore) return [];
+
+    // if (currentUserId.isEmpty) return [];
+
+    // print("Fetching my posts");
+
+    Query query = posts
+        .where('userId', isEqualTo: currentUserId)
+        .orderBy('createdAt', descending: true);
         // .limit(limit);
 
     // if (lastDoc != null) {

@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/profile_info.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/pages/my_post.dart';
-// import 'package:mini_twitter/pages/my_post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/post_service.dart';
 import 'package:mini_twitter/services/user_service.dart';
+import 'package:mini_twitter/utils/tab_bar_delegate.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String? userId; 
+  final String? userId;
 
   const ProfilePage({super.key, this.userId});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
-
 
 class _ProfilePageState extends State<ProfilePage> {
   List<PostModel> posts = [];
@@ -38,17 +36,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _initialFetch() async {
     final provider = context.read<CurrentUserProvider>();
-    
+
     // 1. Déterminer l'ID de l'utilisateur (soit le profil visité, soit moi-même)
     final uid = widget.userId ?? provider.currentUser?.uid;
 
     if (uid == null) return;
 
     // 2. Lancer les deux appels en parallèle pour gagner du temps
-    await Future.wait([
-      _fetchPosts(uid),
-      _fetchUserInfo(uid),
-    ]);
+    await Future.wait([_fetchPosts(uid), _fetchUserInfo(uid)]);
 
     if (mounted) {
       setState(() {
@@ -79,15 +74,13 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
 
     if (provider.currentUser == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return DefaultTabController(
@@ -99,63 +92,87 @@ class _ProfilePageState extends State<ProfilePage> {
           centerTitle: true,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(1),
-            child: Container(
-              color: Colors.grey, 
-              height: 0.5,          
-            ),
+            child: Container(color: Colors.grey, height: 0.5),
           ),
 
           title: Text('Profile'),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                
-              },
-            ),
-          ],
+          actions: [IconButton(icon: Icon(Icons.settings), onPressed: () {})],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 30, right: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: ProfileHeader(user: provider.currentUser!),// ton composant
+              ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: TabBarDelegate(
+                  TabBar(
+                    labelColor: Color(0xFF137FEC),
+                    unselectedLabelColor: Colors.grey,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tabs: [
+                      Tab(text: "Posts"),
+                      Tab(text: "Media"),
+                      Tab(text: "Likes"),
+                    ],
+                  ),
+                ),
+              ),
+            ];
+          },
+          body: TabBarView(
             children: [
-              ProfileHeader(user: provider.currentUser!),
-              
-              const SizedBox(height: 20),
-              
-              PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
-              
-              const SizedBox(height: 20),
-              
-              TabBar(
-                labelColor: Color(0xFF137FEC),
-                unselectedLabelColor: Colors.grey,
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                tabs: [
-                  Tab(text: 'Posts'),
-                  Tab(text: 'Media'),
-                  Tab(text: 'Likes'),
-                ],
-              ),
-
-              SizedBox(
-                height: 1000, 
-                child: TabBarView(
-                  children: [
-                    MyPostPage(posts: posts, userInfo: userInfo),
-                    Center(child: Text("Photos / vidéos")),
-                    Center(child: Text("Posts likés")),
-                  ],
-                ),
-              ),
+              MyPostPage(posts: posts, userInfo: userInfo),
+              Center(child: Text("Photos / vidéos")),
+              Center(child: Text("Posts likés")),
             ],
           ),
-        )
-      )
+          // body: SingleChildScrollView(
+          //   padding: const EdgeInsets.only(left: 30, right: 30),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       ProfileHeader(user: provider.currentUser!),
+
+          //       const SizedBox(height: 20),
+
+          //       PrimaryButton(label: 'Edit profile', isLoading: false, onPressed: () {}),
+
+          //       const SizedBox(height: 20),
+
+          //       TabBar(
+          //         labelColor: Color(0xFF137FEC),
+          //         unselectedLabelColor: Colors.grey,
+          //         indicatorSize: TabBarIndicatorSize.tab,
+          //         labelStyle: TextStyle(
+          //           fontWeight: FontWeight.bold,
+          //         ),
+          //         tabs: [
+          //           Tab(text: 'Posts'),
+          //           Tab(text: 'Media'),
+          //           Tab(text: 'Likes'),
+          //         ],
+          //       ),
+
+          //       SizedBox(
+          //         height: 1000,
+          //         child: TabBarView(
+          //           children: [
+          //             MyPostPage(posts: posts, userInfo: userInfo),
+          //             Center(child: Text("Photos / vidéos")),
+          //             Center(child: Text("Posts likés")),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // )
+        ),
+      ),
     );
   }
 }
