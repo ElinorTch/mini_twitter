@@ -8,6 +8,7 @@ class UserModel {
   final String? bio;
   final List<String> followers;
   final List<String> following;
+  final List<String> posts;
   final DateTime joinedAt;
 
   UserModel({
@@ -18,6 +19,7 @@ class UserModel {
     this.bio,
     required this.followers,
     required this.following,
+    required this.posts,
     required this.joinedAt,
   });
 
@@ -30,6 +32,7 @@ class UserModel {
       bio: map['bio'],
       followers: List<String>.from(map['followers'] ?? []),
       following: List<String>.from(map['following'] ?? []),
+      posts: List<String>.from(map['posts'] ?? []),
       joinedAt: (map['joinedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -42,6 +45,7 @@ class UserModel {
       'bio': bio,
       'followers': followers,
       'following': following,
+      'posts': posts,
       'joinedAt': joinedAt,
     };
   }
@@ -53,6 +57,7 @@ class UserModel {
     String? bio,
     List<String>? followers,
     List<String>? following,
+    List<String>? posts,
   }) {
     return UserModel(
       uid: uid,
@@ -62,6 +67,7 @@ class UserModel {
       bio: bio ?? this.bio,
       followers: followers ?? this.followers,
       following: following ?? this.following,
+      posts: posts ?? this.posts,
       joinedAt: joinedAt,
     );
   }

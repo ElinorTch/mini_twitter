@@ -19,9 +19,10 @@ class PostModel {
     required this.comments,
   });
 
-  factory PostModel.fromMap(Map<String, dynamic> map) {
+  factory PostModel.fromMap(Map<String, dynamic> map, String documentId) {
+    print("Map du post model");
     return PostModel(
-      uid: map['uid'],
+      uid: documentId,
       userId: map['userId'],
       text: map['text'] ?? '',
       imageUrl: map['imageUrl'],

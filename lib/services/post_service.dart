@@ -8,7 +8,9 @@ import 'package:mini_twitter/services/image_service.dart';
 
 class PostService {
   final imageService = ImageService();
-  final users = FirebaseFirestore.instance.collection('posts');
+  final posts = FirebaseFirestore.instance.collection('posts');
+  DocumentSnapshot? lastDoc;
+  bool hasMore = true;
 
   Future<String?> uploadPostPhoto(PostModel? currentPost) async {
     XFile? image = await imageService.pickImageFromGallery();
@@ -31,7 +33,6 @@ class PostService {
     final postId = postRef.id;
 
     await postRef.set({
-      'id': postId,
       'userId': uid,
       'text': 'Mon premier post !', 
       'imageUrl': null,
@@ -44,9 +45,109 @@ class PostService {
     return postId;
   }
 
-  Future<void> updateProfilePhoto(String uid, String photoUrl) async {
-    await users.doc(uid).update({
-      'photoUrl': photoUrl,
-    });
+  Future<List<PostModel>> getFollowingPosts(
+    List<String> followingIds, {
+    int limit = 10,
+  }) async {
+    if (!hasMore) return [];
+
+    print("Fetching following posts for IDs: $followingIds");
+
+    if (followingIds.isEmpty) return []; 
+
+    Query query = posts
+        .where('userId', whereIn: followingIds)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+
+    if (lastDoc != null) {
+      query = query.startAfterDocument(lastDoc!);
+    }
+
+    final snapshot = await query.get();
+
+    if (snapshot.docs.isNotEmpty) {
+      lastDoc = snapshot.docs.last;
+    }
+
+    if (snapshot.docs.length < limit) {
+      hasMore = false;
+    }
+
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .toList();
+  }
+
+  Future<List<PostModel>> getMyLikedPosts(
+    String currentUserId, {
+    int limit = 10,
+  }) async {
+    // if (!hasMore) return [];
+
+    // if (currentUserId.isEmpty) return [];
+
+    // print("Fetching my posts");
+
+    Query query = posts
+        .where('likes', isEqualTo: 5);
+        // .orderBy('createdAt', descending: true);
+        // .limit(limit);
+
+    // if (lastDoc != null) {
+    //   query = query.startAfterDocument(lastDoc!);
+    // }
+
+    final snapshot = await query.get();
+
+    // if (snapshot.docs.isNotEmpty) {
+    //   lastDoc = snapshot.docs.last;
+    // }
+
+    // if (snapshot.docs.length < limit) {
+    //   hasMore = false;
+    // }
+
+    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
+
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .toList();
+  }
+
+  Future<List<PostModel>> getMyPosts(
+    String currentUserId, {
+    int limit = 10,
+  }) async {
+    // if (!hasMore) return [];
+
+    // if (currentUserId.isEmpty) return [];
+
+    // print("Fetching my posts");
+
+    Query query = posts
+        .where('userId', isEqualTo: currentUserId)
+        .orderBy('createdAt', descending: true);
+        // .limit(limit);
+
+    // if (lastDoc != null) {
+    //   query = query.startAfterDocument(lastDoc!);
+    // }
+
+    final snapshot = await query.get();
+
+    // if (snapshot.docs.isNotEmpty) {
+    //   lastDoc = snapshot.docs.last;
+    // }
+
+    // if (snapshot.docs.length < limit) {
+    //   hasMore = false;
+    // }
+
+    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
+
+    return snapshot.docs
+        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .toList();
   }
 }

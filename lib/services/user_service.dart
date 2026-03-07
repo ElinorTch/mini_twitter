@@ -10,9 +10,21 @@ import 'package:mini_twitter/services/image_service.dart';
 class UserService {
   final imageService = ImageService();
   final users = FirebaseFirestore.instance.collection('users');
+  Map<String, UserModel> usersCache = {};
 
   Future<User?> getCurrentUser() async {
     return FirebaseAuth.instance.currentUser!;
+  }
+
+  Future<UserModel> getUser(String userId) async {
+    if (usersCache.containsKey(userId)) {
+      return usersCache[userId]!;
+    }
+
+    final user = await getUserById(userId);
+    print("Fetched user: ${user?.email}");
+    usersCache[userId] = user!;
+    return user;
   }
 
   Future<String?> uploadUserProfilePhoto(UserModel? currentUser) async {
@@ -49,6 +61,7 @@ class UserService {
   }
 
   Future<UserModel?> getUserById(String uid) async {
+    print("Getting user by ID: $uid");
     DocumentSnapshot doc = await users.doc(uid).get();
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data() as Map<String, dynamic>, uid);
@@ -62,28 +75,5 @@ class UserService {
         .get();
 
     return query.docs.isNotEmpty; 
-  }
-
-
-  // ➕ Follow
-  Future<void> follow(String currentUserId, String targetUserId) async {
-    await users.doc(targetUserId).update({
-      'followers': FieldValue.arrayUnion([currentUserId])
-    });
-
-    await users.doc(currentUserId).update({
-      'following': FieldValue.arrayUnion([targetUserId])
-    });
-  }
-
-  // ➖ Unfollow
-  Future<void> unfollow(String currentUserId, String targetUserId) async {
-    await users.doc(targetUserId).update({
-      'followers': FieldValue.arrayRemove([currentUserId])
-    });
-
-    await users.doc(currentUserId).update({
-      'following': FieldValue.arrayRemove([targetUserId])
-    });
   }
 }

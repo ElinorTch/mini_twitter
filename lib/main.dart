@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           indicatorColor: Colors.transparent,
         ),
       ),
-      home: const AuthGate(),
+      home: AuthGate(),
     );
   }
 }
