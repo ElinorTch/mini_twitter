@@ -23,26 +23,21 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? userInfo;
   bool _isLoading = true;
 
-  // Initialisez vos services ici
   final PostService _postService = PostService();
   final UserService _userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    // On utilise microtask pour s'assurer que le context est prêt
     Future.microtask(() => _initialFetch());
   }
 
   Future<void> _initialFetch() async {
     final provider = context.read<CurrentUserProvider>();
-
-    // 1. Déterminer l'ID de l'utilisateur (soit le profil visité, soit moi-même)
     final uid = widget.userId ?? provider.currentUser?.uid;
-
+    
     if (uid == null) return;
-
-    // 2. Lancer les deux appels en parallèle pour gagner du temps
+    
     await Future.wait([_fetchPosts(uid), _fetchUserInfo(uid)]);
 
     if (mounted) {
@@ -53,17 +48,13 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchPosts(String uid) async {
-    print("Fetching posts for user ID: $uid");
     final userPosts = await _postService.getMyPosts(uid);
-    print("Uid: $uid, posts récupérés: ${userPosts.length}");
     if (mounted) {
       setState(() => posts = userPosts);
-      print("les posts ont été récupérés : ${posts.length}");
     }
   }
 
   Future<void> _fetchUserInfo(String uid) async {
-    // Si c'est mon propre profil, on a déjà les infos dans le provider
     if (widget.userId == null) {
       final provider = context.read<CurrentUserProvider>();
       setState(() => userInfo = provider.currentUser);
