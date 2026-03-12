@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/profile_info.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/pages/liked_post.dart';
 import 'package:mini_twitter/pages/my_post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/post_service.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   List<PostModel> posts = [];
+  List<PostModel> likedPosts = [];
   UserModel? userInfo;
   bool _isLoading = true;
 
@@ -38,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
     
     if (uid == null) return;
     
-    await Future.wait([_fetchPosts(uid), _fetchUserInfo(uid)]);
+    await Future.wait([_fetchPosts(uid), _fetchLikedPosts(uid), _fetchUserInfo(uid)]);
 
     if (mounted) {
       setState(() {
@@ -51,6 +53,13 @@ class _ProfilePageState extends State<ProfilePage> {
     final userPosts = await _postService.getMyPosts(uid);
     if (mounted) {
       setState(() => posts = userPosts);
+    }
+  }
+
+  Future<void> _fetchLikedPosts(String uid) async {
+    final likedPostsFetched = await _postService.getLikedPosts(uid);
+    if (mounted) {
+      setState(() => likedPosts = likedPostsFetched);
     }
   }
 
@@ -121,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 MyPostPage(posts: posts, userInfo: userInfo),
                 Center(child: Text("Photos / vidéos")),
-                Center(child: Text("Posts likés")),
+                LikedPostPage(likedPosts: likedPosts, userInfo: userInfo)
               ],
             ),
           ),
