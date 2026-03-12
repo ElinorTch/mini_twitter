@@ -9,6 +9,7 @@ class UserModel {
   final List<String> followers;
   final List<String> following;
   final List<String> posts;
+  final List<String> likedPosts;
   final DateTime joinedAt;
 
   UserModel({
@@ -21,6 +22,7 @@ class UserModel {
     required this.following,
     required this.posts,
     required this.joinedAt,
+    required this.likedPosts,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String documentId) {
@@ -34,6 +36,7 @@ class UserModel {
       following: List<String>.from(map['following'] ?? []),
       posts: List<String>.from(map['posts'] ?? []),
       joinedAt: (map['joinedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      likedPosts: List<String>.from(map['likedPosts'] ?? []),
     );
   }
 
@@ -47,6 +50,7 @@ class UserModel {
       'following': following,
       'posts': posts,
       'joinedAt': joinedAt,
+      'likedPosts': likedPosts,
     };
   }
 
@@ -58,6 +62,7 @@ class UserModel {
     List<String>? followers,
     List<String>? following,
     List<String>? posts,
+    List<String>? likedPosts,
   }) {
     return UserModel(
       uid: uid,
@@ -69,6 +74,7 @@ class UserModel {
       following: following ?? this.following,
       posts: posts ?? this.posts,
       joinedAt: joinedAt,
+      likedPosts: likedPosts ?? this.likedPosts,
     );
   }
 }
