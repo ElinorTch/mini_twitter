@@ -1,14 +1,19 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/models/post.dart';
+import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/services/image_service.dart';
+import 'package:mini_twitter/services/user_service.dart';
 
 class PostService {
   final imageService = ImageService();
   final posts = FirebaseFirestore.instance.collection('posts');
+  final userService = UserService();
+
   DocumentSnapshot? lastDoc;
   bool hasMore = true;
 
@@ -17,8 +22,10 @@ class PostService {
 
     if (image != null && currentPost != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final profileImageRef = storageRef.child('posts/${currentPost.uid}/post.jpg');
-      
+      final profileImageRef = storageRef.child(
+        'posts/${currentPost.uid}/post.jpg',
+      );
+
       File imageFile = File(image.path);
       profileImageRef.putFile(imageFile);
 
@@ -34,7 +41,7 @@ class PostService {
 
     await postRef.set({
       'userId': uid,
-      'text': 'Mon premier post !', 
+      'text': 'Mon premier post !',
       'imageUrl': null,
       'createdAt': DateTime.now(),
       'updatedAt': DateTime.now(),
@@ -53,7 +60,7 @@ class PostService {
 
     print("Fetching following posts for IDs: $followingIds");
 
-    if (followingIds.isEmpty) return []; 
+    if (followingIds.isEmpty) return [];
 
     Query query = posts
         .where('userId', whereIn: followingIds)
@@ -75,44 +82,38 @@ class PostService {
     }
 
     return snapshot.docs
-        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .map(
+          (doc) =>
+              PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+        )
         .toList();
   }
 
-  Future<List<PostModel>> getMyLikedPosts(
+  Future<List<PostModel>> getLikedPosts(
     String currentUserId, {
     int limit = 10,
   }) async {
-    // if (!hasMore) return [];
+    UserModel? user = await userService.getUserById(currentUserId);
 
-    // if (currentUserId.isEmpty) return [];
+    if (user == null || user.likedPosts.isEmpty) {
+      return [];
+    }
 
-    // print("Fetching my posts");
+    print("Je suis dans getLikedPosts avec les likedPosts suivants: ${user.likedPosts}");
 
-    Query query = posts
-        .where('likes', isEqualTo: 5);
-        // .orderBy('createdAt', descending: true);
-        // .limit(limit);
+    List<PostModel> likedPosts = [];
 
-    // if (lastDoc != null) {
-    //   query = query.startAfterDocument(lastDoc!);
-    // }
+    for (var likedPostId in user.likedPosts) {
+      final snapshot = await posts.doc(likedPostId).get();
 
-    final snapshot = await query.get();
+      likedPosts.add(
+              PostModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id),
+      );
+    }
 
-    // if (snapshot.docs.isNotEmpty) {
-    //   lastDoc = snapshot.docs.last;
-    // }
+    print("Liked post mapped: $likedPosts");
 
-    // if (snapshot.docs.length < limit) {
-    //   hasMore = false;
-    // }
-
-    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
-
-    return snapshot.docs
-        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
-        .toList();
+    return likedPosts;
   }
 
   Future<List<PostModel>> getMyPosts(
@@ -128,7 +129,7 @@ class PostService {
     Query query = posts
         .where('userId', isEqualTo: currentUserId)
         .orderBy('createdAt', descending: true);
-        // .limit(limit);
+    // .limit(limit);
 
     // if (lastDoc != null) {
     //   query = query.startAfterDocument(lastDoc!);
@@ -147,7 +148,10 @@ class PostService {
     print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
 
     return snapshot.docs
-        .map((doc) => PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+        .map(
+          (doc) =>
+              PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+        )
         .toList();
   }
 }
