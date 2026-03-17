@@ -9,6 +9,8 @@ import 'package:mini_twitter/services/post_service.dart';
 import 'package:mini_twitter/services/user_service.dart';
 import 'package:mini_twitter/utils/tab_bar_delegate.dart';
 import 'package:provider/provider.dart';
+import 'package:mini_twitter/authentication/logout.dart';
+
 
 class ProfilePage extends StatefulWidget {
   final String? userId;
@@ -96,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           title: Text('Profile'),
-          actions: [IconButton(icon: Icon(Icons.settings), onPressed: () {})],
+          actions: [LogoutButton(),],
         ),
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
