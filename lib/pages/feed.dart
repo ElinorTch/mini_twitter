@@ -20,7 +20,8 @@ class FeedPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15),
-        child: DefaultTabController(length: 2, 
+        child: DefaultTabController(
+          length: 2,
           child: Column(
             children: [
               TabBar(
@@ -32,7 +33,7 @@ class FeedPage extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text('Following Feed, to come!!')),
+                    FollowingFeed(),
                     // FollowingFeed(),
                     Center(child: Text('For You Feed, To come!!')),
                     // Image.asset('assets/images/profile.png')
@@ -40,8 +41,8 @@ class FeedPage extends StatelessWidget {
                 ),
               ),
             ],
-          )
-        )
+          ),
+        ),
       ),
     );
   }
