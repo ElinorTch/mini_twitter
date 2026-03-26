@@ -11,7 +11,6 @@ import 'package:mini_twitter/utils/tab_bar_delegate.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_twitter/authentication/logout.dart';
 
-
 class ProfilePage extends StatefulWidget {
   final String? userId;
 
@@ -39,10 +38,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _initialFetch() async {
     final provider = context.read<CurrentUserProvider>();
     final uid = widget.userId ?? provider.currentUser?.uid;
-    
+
     if (uid == null) return;
-    
-    await Future.wait([_fetchPosts(uid), _fetchLikedPosts(uid), _fetchUserInfo(uid)]);
+
+    await Future.wait([
+      _fetchPosts(uid),
+      _fetchLikedPosts(uid),
+      _fetchUserInfo(uid),
+    ]);
 
     if (mounted) {
       setState(() {
@@ -98,15 +101,13 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
 
           title: Text('Profile'),
-          actions: [LogoutButton(),],
+          actions: [LogoutButton()],
         ),
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverToBoxAdapter(
-                child: ProfileHeader(
-                  user: provider.currentUser!,
-                ), 
+                child: ProfileHeader(user: provider.currentUser!),
               ),
               SliverPersistentHeader(
                 pinned: true,
@@ -132,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 MyPostPage(posts: posts, userInfo: userInfo),
                 Center(child: Text("Photos / vidéos")),
-                LikedPostPage(likedPosts: likedPosts, userInfo: userInfo)
+                LikedPostPage(likedPosts: likedPosts, userInfo: userInfo),
               ],
             ),
           ),
