@@ -6,6 +6,7 @@ import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/post_service.dart';
 import 'package:mini_twitter/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class FollowingFeed extends StatefulWidget {
   const FollowingFeed({super.key});
@@ -15,7 +16,6 @@ class FollowingFeed extends StatefulWidget {
 }
 
 class _FollowingFeedState extends State<FollowingFeed> {
-  final currentUser = CurrentUserProvider();
   final PostService postService = PostService();
   final UserService userService = UserService();
 
@@ -25,15 +25,16 @@ class _FollowingFeedState extends State<FollowingFeed> {
   @override
   void initState() {
     super.initState();
-    loadPosts();
+    Future.microtask(() => loadPosts());
   }
 
   Future<void> loadPosts() async {
-    final following = currentUser.currentUser?.following ?? [];
+    final provider = context.read<CurrentUserProvider>();
+    final following = provider.currentUser!.following;
 
-    print("User is following: ${currentUser.currentUser}");
+    print("User is following: ${provider.currentUser!.following}");
 
-    final fetchedPosts = await postService.getMyPosts(currentUser.currentUser!.uid);
+    final fetchedPosts = await postService.getFollowingPosts(following);
 
     // for (final post in fetchedPosts) {
     //   await userService.getUser(post.userId);
@@ -47,6 +48,8 @@ class _FollowingFeedState extends State<FollowingFeed> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<CurrentUserProvider>();
+
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -55,27 +58,21 @@ class _FollowingFeedState extends State<FollowingFeed> {
       return IconButton(
         icon: Icon(Icons.refresh),
         onPressed: () {
-          loadPosts();
+          // loadPosts();
         },
       );
-// const Center(child: Text("Aucun post pour le moment"));
+      // const Center(child: Text("Aucun post pour le moment"));
     }
 
-    return RefreshIndicator(
-      onRefresh: loadPosts,
-      child: ListView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index];
-          final user = userService.usersCache[post.userId]!;
+    return ListView.builder(
+      physics: AlwaysScrollableScrollPhysics(),
+      itemCount: posts.length,
+      itemBuilder: (context, index) {
+        final post = posts[index];
+        final user = userService.usersCache[post.userId]!;
 
-          return PostCard(
-            post: post,
-            user: user,
-          );
-        },
-      ),
+        return PostCard(post: post, user: user);
+      },
     );
   }
 }

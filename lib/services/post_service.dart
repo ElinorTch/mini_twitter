@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/models/post.dart';
@@ -56,37 +54,39 @@ class PostService {
     List<String> followingIds, {
     int limit = 10,
   }) async {
-    if (!hasMore) return [];
+    // if (!hasMore) return [];
 
     print("Fetching following posts for IDs: $followingIds");
 
-    if (followingIds.isEmpty) return [];
+    return [] as List<PostModel>;
 
-    Query query = posts
-        .where('userId', whereIn: followingIds)
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+    // if (followingIds.isEmpty) return [];
 
-    if (lastDoc != null) {
-      query = query.startAfterDocument(lastDoc!);
-    }
+    // Query query = posts.where('userId', whereIn: followingIds);
+    // // .limit(limit);
 
-    final snapshot = await query.get();
+    // // if (lastDoc != null) {
+    // //   query = query.startAfterDocument(lastDoc!);
+    // // }
 
-    if (snapshot.docs.isNotEmpty) {
-      lastDoc = snapshot.docs.last;
-    }
+    // final snapshot = await query.get();
 
-    if (snapshot.docs.length < limit) {
-      hasMore = false;
-    }
+    // // if (snapshot.docs.isNotEmpty) {
+    // //   lastDoc = snapshot.docs.last;
+    // // }
 
-    return snapshot.docs
-        .map(
-          (doc) =>
-              PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
-        )
-        .toList();
+    // // if (snapshot.docs.length < limit) {
+    // //   hasMore = false;
+    // // }
+
+    // print('is empty: ${snapshot.docs.isEmpty}');
+
+    // return snapshot.docs
+    //     .map(
+    //       (doc) =>
+    //           PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+    //     )
+    //     .toList();
   }
 
   Future<List<PostModel>> getLikedPosts(
@@ -99,7 +99,9 @@ class PostService {
       return [];
     }
 
-    print("Je suis dans getLikedPosts avec les likedPosts suivants: ${user.likedPosts}");
+    print(
+      "Je suis dans getLikedPosts avec les likedPosts suivants: ${user.likedPosts}",
+    );
 
     List<PostModel> likedPosts = [];
 
@@ -107,7 +109,7 @@ class PostService {
       final snapshot = await posts.doc(likedPostId).get();
 
       likedPosts.add(
-              PostModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id),
+        PostModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id),
       );
     }
 
@@ -124,7 +126,7 @@ class PostService {
 
     // if (currentUserId.isEmpty) return [];
 
-    // print("Fetching my posts");
+    print("Fetching my posts");
 
     Query query = posts
         .where('userId', isEqualTo: currentUserId)
@@ -144,8 +146,6 @@ class PostService {
     // if (snapshot.docs.length < limit) {
     //   hasMore = false;
     // }
-
-    print("Posts fetched: ${snapshot.docs} for user ID: $currentUserId");
 
     return snapshot.docs
         .map(
