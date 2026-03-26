@@ -6,6 +6,7 @@ class PostModel {
   final String text;
   final String? imageUrl;
   final DateTime createdAt;
+  final DateTime updatedAt;
   final int likes;
   final List<String> comments;
 
@@ -15,6 +16,7 @@ class PostModel {
     required this.text,
     this.imageUrl,
     required this.createdAt,
+    required this.updatedAt,
     required this.likes,
     required this.comments,
   });
@@ -27,6 +29,7 @@ class PostModel {
       text: map['text'] ?? '',
       imageUrl: map['imageUrl'],
       createdAt: (map['createdAt'] as Timestamp).toDate(),
+      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       likes: map['likes'] ?? 0,
       comments: List<String>.from(map['comments'] ?? []),
     );
@@ -34,11 +37,11 @@ class PostModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
       'userId': userId,
       'text': text,
       'imageUrl': imageUrl,
       'createdAt': createdAt,
+      'updatedAt': updatedAt,
       'likes': likes,
       'comments': comments,
     };
