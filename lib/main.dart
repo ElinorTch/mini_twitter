@@ -3,12 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/authentication/auth_gate.dart';
 import 'package:mini_twitter/authentication/logout.dart';
+import 'package:mini_twitter/pages/feed.dart';
 import 'package:mini_twitter/pages/profile.dart';
+import 'package:mini_twitter/pages/feat-create-post-page.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:mini_twitter/components/navigation/navigation_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart'; 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
           indicatorColor: Colors.transparent,
         ),
       ),
-      home: const AuthGate(),
+      home: AuthGate(),
     );
   }
 }
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController usernameController = TextEditingController();
 
   final List<Widget> _pages = [
-    Text( 'Home Page' ),
+    FeedPage(),
     LogoutButton(),
     ProfilePage(),
   ];
@@ -75,6 +77,21 @@ class _HomePageState extends State<HomePage> {
         child: _pages.elementAt(_selectedIndex),
       ),
       
+floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red, // La couleur rouge demandée
+        elevation: 0, // Optionnel : pour un look plus plat
+        child: const Icon(Icons.add, color: Colors.white), // Le "+" en blanc
+        onPressed: () {
+          // Navigation vers la page de création de post
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreatePostScreen(),
+            ),
+          );
+        },
+      ),
+
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) {

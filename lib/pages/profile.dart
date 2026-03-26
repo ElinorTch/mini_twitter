@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
@@ -24,8 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
   UserModel? userInfo;
 
   Future<void> _loadUserInfo(CurrentUserProvider provider) async {
-    final currentUser = await userService.getCurrentUser();
-
     final userInfo = widget.userId == null
         ? provider.currentUser
         : await userService.getUserById(widget.userId!);
@@ -35,12 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
   }
 
-  
+ 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
@@ -88,8 +86,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   final url = "$profileUrl?v=${DateTime.now().millisecondsSinceEpoch}";
                   if (profileUrl != null && userInfo != null) {
                     userService.updateProfilePhoto(userInfo!.uid, url);
-                    provider.refreshUser();
                   }
+
                 },
                 child: CircleAvatar(
                   radius: 50,
