@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:provider/provider.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -8,11 +10,12 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  // Contrôleur pour récupérer le texte écrit par l'utilisateur
   final TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<CurrentUserProvider>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       // 1. La barre du haut (AppBar)
@@ -44,36 +47,44 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 // TODO: Ajouter la logique pour envoyer le tweet sur Firebase
                 print("Contenu du post: ${_textController.text}");
               },
-              child: const Text("Publish", style: TextStyle(color: Colors.white)),
+              child: const Text(
+                "Publish",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-          )
+          ),
         ],
       ),
-      
-      // 2. Le contenu principal
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // A. Ligne Avatar + Nom
             Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 20,
-                  backgroundColor: Colors.grey, // Remplacer par NetworkImage plus tard
-                  // backgroundImage: NetworkImage('URL_DE_LA_PHOTO'),
+                  backgroundImage: provider.currentUser?.photoUrl != null
+                      ? NetworkImage(provider.currentUser!.photoUrl!)
+                      : AssetImage('assets/images/user.png') as ImageProvider,
                 ),
                 const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Alex Johnson", style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text("Public", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  children: [
+                    Text(
+                      provider.currentUser!.pseudo,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Public",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
                   ],
                 ),
               ],
             ),
-            
+
             // B. Zone de texte (What's on your mind?)
             Expanded(
               child: TextField(
@@ -82,11 +93,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   hintText: "What's on your mind?",
-                  border: InputBorder.none, // Pas de bordure comme sur le design
+                  border:
+                      InputBorder.none, // Pas de bordure comme sur le design
                 ),
               ),
             ),
-            
+
             // C. Barre d'icônes en bas + Compteur
             const Divider(), // Ligne de séparation fine
             Row(
@@ -96,25 +108,31 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: const Icon(Icons.location_on_outlined, color: Colors.grey),
+                  icon: const Icon(
+                    Icons.location_on_outlined,
+                    color: Colors.grey,
+                  ),
                   onPressed: () {},
                 ),
-                 IconButton(
+                IconButton(
                   icon: const Icon(Icons.alternate_email, color: Colors.grey),
                   onPressed: () {},
                 ),
-                 IconButton(
+                IconButton(
                   icon: const Icon(Icons.tag, color: Colors.grey),
                   onPressed: () {},
                 ),
-                 IconButton(
-                  icon: const Icon(Icons.sentiment_satisfied_alt, color: Colors.grey),
+                IconButton(
+                  icon: const Icon(
+                    Icons.sentiment_satisfied_alt,
+                    color: Colors.grey,
+                  ),
                   onPressed: () {},
                 ),
                 const Spacer(), // Pousse le texte à droite
                 const Text("0/280", style: TextStyle(color: Colors.grey)),
               ],
-            )
+            ),
           ],
         ),
       ),
