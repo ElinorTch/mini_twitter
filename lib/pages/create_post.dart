@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/main.dart';
+import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/services/post_service.dart';
 import 'package:provider/provider.dart';
 
 class CreatePostScreen extends StatefulWidget {
@@ -11,6 +14,7 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _textController = TextEditingController();
+  final PostService _postService = PostService();
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +26,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // Fermer la page
-          },
-        ),
         title: const Text(
           "New Post",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
@@ -44,8 +42,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
               onPressed: () {
-                // TODO: Ajouter la logique pour envoyer le tweet sur Firebase
-                print("Contenu du post: ${_textController.text}");
+                PostModel post = PostModel(
+                  userId: provider.currentUser!.uid,
+                  text: _textController.text,
+                );
+                _postService.createPosts(post);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HomePage()),
+                );
               },
               child: const Text(
                 "Publish",
@@ -85,22 +90,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ],
             ),
 
-            // B. Zone de texte (What's on your mind?)
             Expanded(
               child: TextField(
                 controller: _textController,
-                maxLines: null, // Permet plusieurs lignes
+                maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
                   hintText: "What's on your mind?",
-                  border:
-                      InputBorder.none, // Pas de bordure comme sur le design
+                  border: InputBorder.none,
                 ),
               ),
             ),
 
-            // C. Barre d'icônes en bas + Compteur
-            const Divider(), // Ligne de séparation fine
+            const Divider(),
             Row(
               children: [
                 IconButton(
@@ -129,7 +131,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                   onPressed: () {},
                 ),
-                const Spacer(), // Pousse le texte à droite
+                const Spacer(),
                 const Text("0/280", style: TextStyle(color: Colors.grey)),
               ],
             ),

@@ -33,19 +33,21 @@ class PostService {
     return null;
   }
 
-  Future<String> createPosts(String uid, String text) async {
+  Future<String> createPosts(PostModel post) async {
     final postRef = FirebaseFirestore.instance.collection('posts').doc();
     final postId = postRef.id;
 
-    await postRef.set({
-      'userId': uid,
-      'text': 'Mon premier post !',
-      'imageUrl': null,
-      'createdAt': DateTime.now(),
-      'updatedAt': DateTime.now(),
-      'likes': 0,
-      'comments': [],
-    });
+    await postRef.set(post.toMap());
+
+    // ({
+    //   'userId': uid,
+    //   'text': text,
+    //   'imageUrl': null,
+    //   'createdAt': DateTime.now(),
+    //   'updatedAt': DateTime.now(),
+    //   'likes': 0,
+    //   'comments': [],
+    // });
 
     return postId;
   }
