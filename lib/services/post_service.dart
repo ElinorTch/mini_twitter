@@ -99,10 +99,6 @@ class PostService {
       return [];
     }
 
-    print(
-      "Je suis dans getLikedPosts avec les likedPosts suivants: ${user.likedPosts}",
-    );
-
     List<PostModel> likedPosts = [];
 
     for (var likedPostId in user.likedPosts) {
@@ -112,8 +108,6 @@ class PostService {
         PostModel.fromMap(snapshot.data() as Map<String, dynamic>, snapshot.id),
       );
     }
-
-    print("Liked post mapped: $likedPosts");
 
     return likedPosts;
   }
