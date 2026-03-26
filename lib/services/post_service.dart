@@ -93,6 +93,7 @@ class PostService {
     String currentUserId, {
     int limit = 10,
   }) async {
+    print('currentUserId: $currentUserId');
     UserModel? user = await userService.getUserById(currentUserId);
 
     if (user == null || user.likedPosts.isEmpty) {

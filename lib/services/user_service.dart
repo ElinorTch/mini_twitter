@@ -32,8 +32,10 @@ class UserService {
 
     if (image != null && currentUser != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final profileImageRef = storageRef.child('users/${currentUser.uid}/profile.jpg');
-      
+      final profileImageRef = storageRef.child(
+        'users/${currentUser.uid}/profile.jpg',
+      );
+
       File imageFile = File(image.path);
       profileImageRef.putFile(imageFile);
 
@@ -55,9 +57,7 @@ class UserService {
   }
 
   Future<void> updateProfilePhoto(String uid, String photoUrl) async {
-    await users.doc(uid).update({
-      'photoUrl': photoUrl,
-    });
+    await users.doc(uid).update({'photoUrl': photoUrl});
   }
 
   Future<UserModel?> getUserById(String uid) async {
@@ -74,6 +74,6 @@ class UserService {
         .limit(1)
         .get();
 
-    return query.docs.isNotEmpty; 
+    return query.docs.isNotEmpty;
   }
 }

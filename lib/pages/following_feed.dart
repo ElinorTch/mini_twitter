@@ -25,14 +25,14 @@ class _FollowingFeedState extends State<FollowingFeed> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => loadPosts());
+    // Future.microtask(() => loadPosts());
   }
 
   Future<void> loadPosts() async {
     final provider = context.read<CurrentUserProvider>();
-    final following = provider.currentUser!.following;
+    final following = provider.currentUser?.following ?? [];
 
-    print("User is following: ${provider.currentUser!.following}");
+    print("User is following: ${provider.currentUser?.following}");
 
     final fetchedPosts = await postService.getFollowingPosts(following);
 
