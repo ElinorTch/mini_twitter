@@ -47,12 +47,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 PostModel post = PostModel(
                   userId: provider.currentUser!.uid,
                   text: _textController.text,
                 );
-                _postService.createPosts(post);
+
+                String postId = await _postService.createPosts(post);
+                _postService.uploadPostPhoto(postId, imageFilePath);
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const HomePage()),

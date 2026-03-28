@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/services/image_service.dart';
@@ -15,19 +14,15 @@ class PostService {
   DocumentSnapshot? lastDoc;
   bool hasMore = true;
 
-  Future<String?> uploadPostPhoto(PostModel? currentPost) async {
-    XFile? image = await imageService.pickImageFromGallery();
-
-    if (image != null && currentPost != null) {
+  Future<String?> uploadPostPhoto(String postId, String? imagePath) async {
+    if (imagePath != null) {
       final storageRef = FirebaseStorage.instance.ref();
-      final profileImageRef = storageRef.child(
-        'posts/${currentPost.uid}/post.jpg',
-      );
+      final profileImageRef = storageRef.child('posts/$postId/post.jpg');
 
-      File imageFile = File(image.path);
-      profileImageRef.putFile(imageFile);
+      File imageFile = File(imagePath);
+      await profileImageRef.putFile(imageFile);
 
-      return profileImageRef.getDownloadURL();
+      updatePostImageUrl(postId, await profileImageRef.getDownloadURL());
     }
 
     return null;
@@ -39,17 +34,13 @@ class PostService {
 
     await postRef.set(post.toMap());
 
-    // ({
-    //   'userId': uid,
-    //   'text': text,
-    //   'imageUrl': null,
-    //   'createdAt': DateTime.now(),
-    //   'updatedAt': DateTime.now(),
-    //   'likes': 0,
-    //   'comments': [],
-    // });
-
     return postId;
+  }
+
+  Future<void> updatePostImageUrl(String postId, String newImageUrl) async {
+    final postRef = FirebaseFirestore.instance.collection('posts').doc(postId);
+
+    await postRef.update({'imageUrl': newImageUrl});
   }
 
   Future<List<PostModel>> getFollowingPosts(
