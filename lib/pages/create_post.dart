@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/services/image_service.dart';
 import 'package:mini_twitter/services/post_service.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +19,8 @@ class CreatePostScreen extends StatefulWidget {
 class _CreatePostScreenState extends State<CreatePostScreen> {
   final TextEditingController _textController = TextEditingController();
   final PostService _postService = PostService();
+  final ImageService _imageService = ImageService();
+  String? imageFilePath;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +96,45 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ],
             ),
 
+            if (imageFilePath != null)
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(imageFilePath!),
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          imageFilePath = null;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(6),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
             Expanded(
               child: TextField(
                 controller: _textController,
@@ -107,7 +152,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.image, color: Colors.blue),
-                  onPressed: () {},
+                  onPressed: () async {
+                    XFile? image = await _imageService.pickImageFromGallery();
+                    if (image != null) {
+                      setState(() {
+                        imageFilePath = image.path;
+                      });
+                    }
+                  },
                 ),
                 IconButton(
                   icon: const Icon(
