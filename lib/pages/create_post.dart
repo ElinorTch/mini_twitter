@@ -99,6 +99,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ],
             ),
 
+            const SizedBox(height: 10),
+
             if (imageFilePath != null)
               Stack(
                 children: [
