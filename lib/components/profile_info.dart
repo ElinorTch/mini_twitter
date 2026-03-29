@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/follow_card.dart';
 import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/user_service.dart';
+import 'package:provider/provider.dart';
 
 class ProfileHeader extends StatelessWidget {
   final UserModel user;
@@ -13,6 +15,8 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CurrentUserProvider userProvider = context.watch<CurrentUserProvider>();
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -101,13 +105,35 @@ class ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          PrimaryButton(
-            label: 'Edit profile',
-            isLoading: false,
-            onPressed: () {},
-          ),
+          if (user.uid == userProvider.currentUser?.uid)
+            PrimaryButton(
+              label: 'Edit profile',
+              isLoading: false,
+              onPressed: () {},
+            ),
 
-          const SizedBox(height: 20),
+          if (user.uid != userProvider.currentUser?.uid)
+            PrimaryButton(
+              label: userProvider.currentUser!.following.contains(user.uid)
+                  ? 'Unfollow'
+                  : 'Follow',
+              isLoading: false,
+              onPressed: () {
+                if (userProvider.currentUser!.following.contains(user.uid)) {
+                  userService.unfollowUser(
+                    userProvider.currentUser!.uid,
+                    user.uid,
+                  );
+                } else {
+                  userService.followUser(
+                    userProvider.currentUser!.uid,
+                    user.uid,
+                  );
+                }
+              },
+            ),
+
+          // const SizedBox(height: 20),
         ],
       ),
     );
