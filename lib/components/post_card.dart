@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/helpers/date_helper.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/pages/profile.dart';
 
 class PostCard extends StatelessWidget {
   final UserModel user;
@@ -18,36 +19,49 @@ class PostCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Color(0xFFf6f7f8),
-                  backgroundImage: user.photoUrl != null
-                      ? NetworkImage(user.photoUrl!)
-                      : null,
-                  child: user.photoUrl == null
-                      ? Image.asset('assets/images/person.png')
-                      : null,
-                ),
-                SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.pseudo,
-                      style: TextStyle(
-                        color: Color(0xFF111418),
-                        fontWeight: FontWeight.bold,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ProfilePage(userId: user.uid),
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Color(0xFFf6f7f8),
+                    backgroundImage: user.photoUrl != null
+                        ? NetworkImage(user.photoUrl!)
+                        : null,
+                    child: user.photoUrl == null
+                        ? Image.asset('assets/images/person.png')
+                        : null,
+                  ),
+                  SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.pseudo,
+                        style: TextStyle(
+                          color: Color(0xFF111418),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      timeAgo(post.createdAt),
-                      style: TextStyle(color: Color(0xFF617589), fontSize: 12),
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(height: 4),
+                      Text(
+                        timeAgo(post.createdAt),
+                        style: TextStyle(
+                          color: Color(0xFF617589),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             if (post.imageUrl != null) ...[
               SizedBox(height: 8),
