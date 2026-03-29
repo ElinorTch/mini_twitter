@@ -19,7 +19,7 @@ class PostModel {
     return PostModel(
       uid: documentId,
       userId: map['userId'],
-      text: map['text'] ?? '',
+      text: map['text'],
       imageUrl: map['imageUrl'],
     );
   }

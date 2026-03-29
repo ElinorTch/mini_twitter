@@ -51,35 +51,36 @@ class PostService {
 
     print("Fetching following posts for IDs: $followingIds");
 
-    return [] as List<PostModel>;
+    // return [] as List<PostModel>;
 
-    // if (followingIds.isEmpty) return [];
+    if (followingIds.isEmpty) return [];
 
-    // Query query = posts.where('userId', whereIn: followingIds);
-    // // .limit(limit);
+    Query query = posts.where('userId', whereIn: followingIds);
+    // .limit(limit);
 
-    // // if (lastDoc != null) {
-    // //   query = query.startAfterDocument(lastDoc!);
-    // // }
+    // if (lastDoc != null) {
+    //   query = query.startAfterDocument(lastDoc!);
+    // }
 
-    // final snapshot = await query.get();
+    final snapshot = await query.get();
 
-    // // if (snapshot.docs.isNotEmpty) {
-    // //   lastDoc = snapshot.docs.last;
-    // // }
+    // if (snapshot.docs.isNotEmpty) {
+    //   lastDoc = snapshot.docs.last;
+    // }
 
-    // // if (snapshot.docs.length < limit) {
-    // //   hasMore = false;
-    // // }
+    // if (snapshot.docs.length < limit) {
+    //   hasMore = false;
+    // }
 
-    // print('is empty: ${snapshot.docs.isEmpty}');
+    print('is empty: ${snapshot.docs.isEmpty}');
+    print("doc ${snapshot.docs.map((doc) => doc.data())}");
 
-    // return snapshot.docs
-    //     .map(
-    //       (doc) =>
-    //           PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
-    //     )
-    //     .toList();
+    return snapshot.docs
+        .map(
+          (doc) =>
+              PostModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+        )
+        .toList();
   }
 
   Future<List<PostModel>> getLikedPosts(

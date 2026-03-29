@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/post_card.dart';
 import 'package:mini_twitter/models/post.dart';
@@ -28,19 +27,23 @@ class _FollowingFeedState extends State<FollowingFeed> {
     // Future.microtask(() => loadPosts());
   }
 
-  Future<void> loadPosts() async {
-    final provider = context.read<CurrentUserProvider>();
-    final following = provider.currentUser?.following ?? [];
+  Future<void> loadPosts(UserModel user) async {
+    // final provider = context.read<CurrentUserProvider>();
+    // final following = provider.currentUser?.following ?? [];
+    final following = user.following;
 
-    print("User is following: ${provider.currentUser?.following}");
+    print("User is following: ${following}");
 
     final fetchedPosts = await postService.getFollowingPosts(following);
 
-    // for (final post in fetchedPosts) {
-    //   await userService.getUser(post.userId);
-    // }
+    for (final post in fetchedPosts) {
+      await userService.getUser(post.userId);
+    }
+
+    print("Les fetchposts $fetchedPosts");
 
     setState(() {
+      // posts = [];
       posts = fetchedPosts;
       isLoading = false;
     });
@@ -50,7 +53,7 @@ class _FollowingFeedState extends State<FollowingFeed> {
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
 
-    if (isLoading) {
+    if (provider.currentUser == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -58,7 +61,7 @@ class _FollowingFeedState extends State<FollowingFeed> {
       return IconButton(
         icon: Icon(Icons.refresh),
         onPressed: () {
-          // loadPosts();
+          loadPosts(provider.currentUser!);
         },
       );
       // const Center(child: Text("Aucun post pour le moment"));
