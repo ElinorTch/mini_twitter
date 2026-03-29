@@ -38,6 +38,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _initialFetch() async {
     final provider = context.read<CurrentUserProvider>();
     final uid = widget.userId ?? provider.currentUser?.uid;
+    print("Le user id recupere: ${widget.userId}");
+    print("Le user id provider: ${provider.currentUser?.uid}");
+    print("Le uid est: $uid");
 
     if (uid == null) return;
 
@@ -69,13 +72,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _fetchUserInfo(String uid) async {
-    if (widget.userId == null) {
+    if (widget.userId != uid) {
       final provider = context.read<CurrentUserProvider>();
       setState(() => userInfo = provider.currentUser);
     } else {
       final user = await _userService.getUserById(uid);
       if (mounted) {
         setState(() => userInfo = user);
+        print("Je suis dans le mounted user");
       }
     }
   }
@@ -84,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final provider = context.watch<CurrentUserProvider>();
 
-    if (provider.currentUser == null) {
+    if (userInfo == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
@@ -106,9 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
-              SliverToBoxAdapter(
-                child: ProfileHeader(user: provider.currentUser!),
-              ),
+              SliverToBoxAdapter(child: ProfileHeader(user: userInfo!)),
               SliverPersistentHeader(
                 pinned: true,
                 delegate: TabBarDelegate(

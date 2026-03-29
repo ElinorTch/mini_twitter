@@ -51,8 +51,6 @@ class PostService {
 
     print("Fetching following posts for IDs: $followingIds");
 
-    // return [] as List<PostModel>;
-
     if (followingIds.isEmpty) return [];
 
     Query query = posts.where('userId', whereIn: followingIds);

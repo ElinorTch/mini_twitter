@@ -64,7 +64,6 @@ class _FollowingFeedState extends State<FollowingFeed> {
           loadPosts(provider.currentUser!);
         },
       );
-      // const Center(child: Text("Aucun post pour le moment"));
     }
 
     return ListView.builder(
