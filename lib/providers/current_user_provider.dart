@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 
 class CurrentUserProvider extends ChangeNotifier {

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/main.dart';
-import 'package:mini_twitter/models/post.dart';
+import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/data/services/image_service.dart';
 import 'package:mini_twitter/data/services/post_service.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/post_card.dart';
-import 'package:mini_twitter/models/post.dart';
-import 'package:mini_twitter/models/user.dart';
+import 'package:mini_twitter/data/models/post_model.dart';
+import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 
 class MyPostPage extends StatelessWidget {
@@ -9,20 +9,13 @@ class MyPostPage extends StatelessWidget {
   final UserModel? userInfo;
   final CurrentUserProvider currentUserProvider = CurrentUserProvider();
 
-  MyPostPage({
-    super.key,
-    required this.posts,
-    required this.userInfo,
-  });
+  MyPostPage({super.key, required this.posts, required this.userInfo});
 
   @override
   Widget build(BuildContext context) {
     if (posts.isEmpty) {
       return const Center(
-        child: Text(
-          "No posts yet",
-          style: TextStyle(color: Colors.grey),
-        ),
+        child: Text("No posts yet", style: TextStyle(color: Colors.grey)),
       );
     }
 
@@ -39,6 +32,5 @@ class MyPostPage extends StatelessWidget {
         );
       },
     );
-
   }
 }
