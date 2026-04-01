@@ -15,8 +15,8 @@ class FollowingFeedPage extends StatefulWidget {
 }
 
 class _FollowingFeedPageState extends State<FollowingFeedPage> {
-  final PostService postService = PostService();
-  final UserService userService = UserService();
+  final PostService _postService = PostService();
+  final UserService _userService = UserService();
 
   List<PostModel> posts = [];
   bool isLoading = true;
@@ -24,7 +24,9 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
   @override
   void initState() {
     super.initState();
-    // Future.microtask(() => loadPosts());
+
+    final provider = context.read<UserProvider>();
+    Future.microtask(() => loadPosts(provider.currentUser!));
   }
 
   Future<void> loadPosts(UserModel user) async {
@@ -34,10 +36,10 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
 
     print("User is following: ${following}");
 
-    final fetchedPosts = await postService.getFollowingPosts(following);
+    final fetchedPosts = await _postService.getFollowingPosts(following);
 
     for (final post in fetchedPosts) {
-      await userService.getUser(post.userId);
+      await _userService.getUser(post.userId);
     }
 
     print("Les fetchposts $fetchedPosts");
@@ -71,7 +73,7 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
       itemCount: posts.length,
       itemBuilder: (context, index) {
         final post = posts[index];
-        final user = userService.usersCache[post.userId]!;
+        final user = _userService.usersCache[post.userId]!;
 
         return PostCard(post: post, user: user);
       },
