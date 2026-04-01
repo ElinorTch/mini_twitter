@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/authentication/login.dart';
-import 'package:mini_twitter/services/user_service.dart';
+import 'package:mini_twitter/data/services/user_service.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -43,20 +43,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               const Text(
                 'Create Account',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 5),
 
               const Text(
                 'Join our community today.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF617589),
-                ),
+                style: TextStyle(fontSize: 16, color: Color(0xFF617589)),
               ),
 
               const SizedBox(height: 40),
@@ -66,9 +60,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: Column(
                   children: <Widget>[
                     LabeledFormInput(
-                      label: 'Email', 
-                      hint: 'Enter your email', 
-                      controller: emailController, 
+                      label: 'Email',
+                      hint: 'Enter your email',
+                      controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -81,9 +75,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 20),
 
                     LabeledFormInput(
-                      label: 'Password', 
-                      hint: 'Enter your password', 
-                      controller: passwordController, 
+                      label: 'Password',
+                      hint: 'Enter your password',
+                      controller: passwordController,
                       obscure: _obscure,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -107,12 +101,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const SizedBox(height: 20),
 
                     LabeledFormInput(
-                      label: 'Confirm password', 
-                      hint: 'Confirm your password', 
-                      controller: confirmPasswordController, 
+                      label: 'Confirm password',
+                      hint: 'Confirm your password',
+                      controller: confirmPasswordController,
                       obscure: _obscure,
                       validator: (value) {
-                        if (value == null || value.isEmpty || value != passwordController.text) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value != passwordController.text) {
                           return 'Your password doesn\'t match';
                         }
                         return null;
@@ -148,7 +144,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                )
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -177,12 +173,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: _isLoading 
-                  ? const CircularProgressIndicator(color: Colors.white) 
-                  : const Text(
-                      'Sign Up',
-                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
 
               SizedBox(height: MediaQuery.of(context).size.height * 0.10),
@@ -192,15 +192,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 children: [
                   Text(
                     "Already have an account?",
-                    style: TextStyle(
-                      color: Color(0xFF617589),
-                    ),
+                    style: TextStyle(color: Color(0xFF617589)),
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
                         (route) => false,
                       );
                     },
@@ -213,17 +213,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                 ],
-              ), 
+              ),
 
               const SizedBox(height: 20),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }
-
 
 Future<void> handleFirebaseRegistration({
   required BuildContext context,
@@ -244,15 +243,18 @@ Future<void> handleFirebaseRegistration({
     setLoading(true);
 
     try {
-      UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
+      UserCredential userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: email.trim(),
+            password: password.trim(),
+          );
 
       User? user = userCredential.user;
 
       if (user != null) {
-        final bool exists = await userService.pseudoExists(user.email!.split('@')[0]);
+        final bool exists = await userService.pseudoExists(
+          user.email!.split('@')[0],
+        );
         if (!exists) {
           await userService.createUser(
             user.uid,
@@ -264,13 +266,10 @@ Future<void> handleFirebaseRegistration({
 
       Future.delayed(const Duration(seconds: 3), () {
         Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => const HomePage(),
-          ), 
+          MaterialPageRoute(builder: (_) => const HomePage()),
           (route) => false,
         );
       });
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         message = 'The password provided is too weak.';
@@ -278,13 +277,13 @@ Future<void> handleFirebaseRegistration({
         message = 'An account already exists with that email.';
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to register: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to register: $e')));
     } finally {
       setLoading(false);
     }

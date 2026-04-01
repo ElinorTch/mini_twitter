@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/models/user.dart';
-import 'package:mini_twitter/services/image_service.dart';
+import 'package:mini_twitter/data/services/image_service.dart';
 
 class UserService {
   final imageService = ImageService();

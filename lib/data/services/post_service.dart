@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
-import 'package:mini_twitter/services/image_service.dart';
-import 'package:mini_twitter/services/user_service.dart';
+import 'package:mini_twitter/data/services/image_service.dart';
+import 'package:mini_twitter/data/services/user_service.dart';
 
 class PostService {
   final imageService = ImageService();

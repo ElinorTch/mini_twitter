@@ -5,8 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
-import 'package:mini_twitter/services/image_service.dart';
-import 'package:mini_twitter/services/post_service.dart';
+import 'package:mini_twitter/data/services/image_service.dart';
+import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:provider/provider.dart';
 
 class CreatePostScreen extends StatefulWidget {
