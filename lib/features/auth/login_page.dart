@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/button.dart';
-import 'package:mini_twitter/components/form_labeled_input.dart';
+import 'package:mini_twitter/features/shared/widgets/app_button.dart';
+import 'package:mini_twitter/features/shared/widgets/form_labeled_input.dart';
 import 'package:mini_twitter/features/auth/google_auth.dart';
 import 'package:mini_twitter/features/auth/registration_page.dart';
 

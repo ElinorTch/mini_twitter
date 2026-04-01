@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mini_twitter/components/button.dart';
+import 'package:mini_twitter/features/shared/widgets/app_button.dart';
 import 'package:mini_twitter/features/posts/widgets/follow_card.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';

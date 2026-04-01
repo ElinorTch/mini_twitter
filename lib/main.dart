@@ -8,7 +8,7 @@ import 'package:mini_twitter/features/posts/create_post_page.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/utils/firebase_options.dart';
-import 'package:mini_twitter/components/navigation/navigation_bar.dart';
+import 'package:mini_twitter/features/shared/widgets/navigation_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
