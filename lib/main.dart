@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:mini_twitter/authentication/auth_gate.dart';
+import 'package:mini_twitter/features/auth/auth_gate.dart';
 import 'package:mini_twitter/pages/feed.dart';
 import 'package:mini_twitter/pages/profile.dart';
 import 'package:mini_twitter/pages/create_post.dart';

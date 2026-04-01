@@ -1,22 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/form_labeled_input.dart';
-import 'package:mini_twitter/authentication/google_auth.dart';
-import 'package:mini_twitter/authentication/registration.dart';
+import 'package:mini_twitter/main.dart';
+import 'package:mini_twitter/features/auth/login_page.dart';
+import 'package:mini_twitter/data/services/user_service.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   bool _obscure = true;
   bool _isLoading = false;
 
   final emailController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final passwordController = TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
 
@@ -38,15 +39,17 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(height: 10),
+
               const Text(
-                'Welcome Back',
+                'Create Account',
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 5),
 
               const Text(
-                'Login to stay connected with your community.',
+                'Join our community today.',
                 style: TextStyle(fontSize: 16, color: Color(0xFF617589)),
               ),
 
@@ -94,6 +97,34 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                     ),
+
+                    const SizedBox(height: 20),
+
+                    LabeledFormInput(
+                      label: 'Confirm password',
+                      hint: 'Confirm your password',
+                      controller: confirmPasswordController,
+                      obscure: _obscure,
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value != passwordController.text) {
+                          return 'Your password doesn\'t match';
+                        }
+                        return null;
+                      },
+                      iconButton: IconButton(
+                        icon: Icon(
+                          _obscure ? Icons.visibility_off : Icons.visibility,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscure = !_obscure;
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -118,12 +149,13 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 20),
 
-              PrimaryButton(
-                label: 'Login',
-                isLoading: _isLoading,
+              ElevatedButton(
                 onPressed: () {
+                  // Validate returns true if the form is valid, or false otherwise.
                   if (_loginFormKey.currentState!.validate()) {
-                    handleLogin(
+                    // If the form is valid, display a snackbar. In the real world,
+                    // you'd often call a server or save the information in a database.
+                    handleFirebaseRegistration(
                       context: context,
                       formKey: _loginFormKey,
                       firebaseAuth: FirebaseAuth.instance,
@@ -134,36 +166,46 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF137FEC),
+                  minimumSize: const Size.fromHeight(60),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
 
-              const SizedBox(height: 20),
-
-              Divider(height: 40, thickness: 1, color: Color(0xFFD1D5DB)),
-
-              const SizedBox(height: 20),
-
-              GoogleAuthButton(),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account?",
+                    "Already have an account?",
                     style: TextStyle(color: Color(0xFF617589)),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RegistrationPage(),
+                          builder: (context) => const LoginPage(),
                         ),
+                        (route) => false,
                       );
                     },
                     child: const Text(
-                      "Sign Up",
+                      "Sign In",
                       style: TextStyle(
                         color: Color(0xFF137FEC),
                         fontWeight: FontWeight.w600,
@@ -182,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-Future<void> handleLogin({
+Future<void> handleFirebaseRegistration({
   required BuildContext context,
   required GlobalKey<FormState> formKey,
   required FirebaseAuth firebaseAuth,
@@ -193,24 +235,56 @@ Future<void> handleLogin({
 }) async {
   if (isLoading) return;
 
-  String message = '';
+  UserService userService = UserService();
+
+  String message = 'Configuration error. Please try again.';
+
   if (formKey.currentState!.validate()) {
     setLoading(true);
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-        message = 'Invalid login credentials.';
-      } else {
-        message = e.code;
+      UserCredential userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: email.trim(),
+            password: password.trim(),
+          );
+
+      User? user = userCredential.user;
+
+      if (user != null) {
+        final bool exists = await userService.pseudoExists(
+          user.email!.split('@')[0],
+        );
+        if (!exists) {
+          await userService.createUser(
+            user.uid,
+            user.email!,
+            user.email!.split('@')[0],
+          );
+        }
       }
+
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const HomePage()),
+          (route) => false,
+        );
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        message = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        message = 'An account already exists with that email.';
+      }
+
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Failed to sign in: $message')));
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to register: $e')));
+    } finally {
       setLoading(false);
     }
   }

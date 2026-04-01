@@ -9,7 +9,7 @@ import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:mini_twitter/core/utils/tab_bar_delegate.dart';
 import 'package:provider/provider.dart';
-import 'package:mini_twitter/authentication/logout.dart';
+import 'package:mini_twitter/features/auth/logout_button.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId;
