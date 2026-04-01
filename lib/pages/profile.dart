@@ -7,7 +7,7 @@ import 'package:mini_twitter/pages/my_post.dart';
 import 'package:mini_twitter/providers/current_user_provider.dart';
 import 'package:mini_twitter/services/post_service.dart';
 import 'package:mini_twitter/services/user_service.dart';
-import 'package:mini_twitter/utils/tab_bar_delegate.dart';
+import 'package:mini_twitter/core/utils/tab_bar_delegate.dart';
 import 'package:provider/provider.dart';
 import 'package:mini_twitter/authentication/logout.dart';
 

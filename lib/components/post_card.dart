@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/helpers/date_helper.dart';
+import 'package:mini_twitter/core/helpers/date_helper.dart';
 import 'package:mini_twitter/models/post.dart';
 import 'package:mini_twitter/models/user.dart';
 import 'package:mini_twitter/pages/profile.dart';
