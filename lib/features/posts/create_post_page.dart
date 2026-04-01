@@ -9,14 +9,14 @@ import 'package:mini_twitter/data/services/image_service.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:provider/provider.dart';
 
-class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+class CreatePostPage extends StatefulWidget {
+  const CreatePostPage({super.key});
 
   @override
-  State<CreatePostScreen> createState() => _CreatePostScreenState();
+  State<CreatePostPage> createState() => _CreatePostPageState();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
+class _CreatePostPageState extends State<CreatePostPage> {
   final TextEditingController _textController = TextEditingController();
   final PostService _postService = PostService();
   final ImageService _imageService = ImageService();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/post_card.dart';
+import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';
@@ -7,14 +7,14 @@ import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:provider/provider.dart';
 
-class FollowingFeed extends StatefulWidget {
-  const FollowingFeed({super.key});
+class FollowingFeedPage extends StatefulWidget {
+  const FollowingFeedPage({super.key});
 
   @override
-  State<FollowingFeed> createState() => _FollowingFeedState();
+  State<FollowingFeedPage> createState() => _FollowingFeedPageState();
 }
 
-class _FollowingFeedState extends State<FollowingFeed> {
+class _FollowingFeedPageState extends State<FollowingFeedPage> {
   final PostService postService = PostService();
   final UserService userService = UserService();
 

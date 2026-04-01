@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/core/helpers/date_helper.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
-import 'package:mini_twitter/pages/profile.dart';
+import 'package:mini_twitter/features/profile/profile_page.dart';
 
 class PostCard extends StatelessWidget {
   final UserModel user;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/post_card.dart';
+import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';

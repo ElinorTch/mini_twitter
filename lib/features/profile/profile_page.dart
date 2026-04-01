@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/components/profile_info.dart';
+import 'package:mini_twitter/features/profile/widgets/profile_header.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
-import 'package:mini_twitter/pages/liked_post.dart';
-import 'package:mini_twitter/pages/my_post.dart';
+import 'package:mini_twitter/features/posts/liked_post_page.dart';
+import 'package:mini_twitter/features/posts/my_post_page.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';

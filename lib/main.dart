@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/features/auth/auth_gate.dart';
-import 'package:mini_twitter/pages/feed.dart';
-import 'package:mini_twitter/pages/profile.dart';
-import 'package:mini_twitter/pages/create_post.dart';
+import 'package:mini_twitter/features/posts/feed_page.dart';
+import 'package:mini_twitter/features/profile/profile_page.dart';
+import 'package:mini_twitter/features/posts/create_post_page.dart';
 import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/utils/firebase_options.dart';
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final TextEditingController usernameController = TextEditingController();
 
-  final List<Widget> _pages = [FeedPage(), CreatePostScreen(), ProfilePage()];
+  final List<Widget> _pages = [FeedPage(), CreatePostPage(), ProfilePage()];
 
   @override
   Widget build(BuildContext context) {
