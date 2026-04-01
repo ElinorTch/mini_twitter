@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mini_twitter/components/button.dart';
 import 'package:mini_twitter/components/follow_card.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
-import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:provider/provider.dart';
 

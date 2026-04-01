@@ -4,7 +4,7 @@ import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/pages/liked_post.dart';
 import 'package:mini_twitter/pages/my_post.dart';
-import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:mini_twitter/core/utils/tab_bar_delegate.dart';

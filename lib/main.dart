@@ -5,7 +5,7 @@ import 'package:mini_twitter/authentication/auth_gate.dart';
 import 'package:mini_twitter/pages/feed.dart';
 import 'package:mini_twitter/pages/profile.dart';
 import 'package:mini_twitter/pages/create_post.dart';
-import 'package:mini_twitter/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/current_user_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/utils/firebase_options.dart';
 import 'package:mini_twitter/components/navigation/navigation_bar.dart';
