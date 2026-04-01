@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +51,7 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<CurrentUserProvider>();
+    final provider = context.watch<UserProvider>();
 
     if (provider.currentUser == null) {
       return const Center(child: CircularProgressIndicator());

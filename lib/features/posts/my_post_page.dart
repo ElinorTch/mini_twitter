@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 
 class MyPostPage extends StatelessWidget {
   final List<PostModel> posts;
   final UserModel? userInfo;
-  final CurrentUserProvider currentUserProvider = CurrentUserProvider();
+  final UserProvider _userProvider = UserProvider();
 
   MyPostPage({super.key, required this.posts, required this.userInfo});
 
@@ -28,7 +28,7 @@ class MyPostPage extends StatelessWidget {
 
         return PostCard(
           post: post,
-          user: userInfo ?? currentUserProvider.currentUser!,
+          user: userInfo ?? _userProvider.currentUser!,
         );
       },
     );

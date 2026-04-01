@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 
-class CurrentUserProvider extends ChangeNotifier {
+class UserProvider extends ChangeNotifier {
   final UserService _userService = UserService();
   UserModel? _currentUser;
   bool _isLoading = true;
@@ -11,7 +11,7 @@ class CurrentUserProvider extends ChangeNotifier {
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
 
-  CurrentUserProvider() {
+  UserProvider() {
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
       _isLoading = true;
       notifyListeners();

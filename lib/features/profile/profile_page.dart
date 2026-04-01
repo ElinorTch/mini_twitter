@@ -4,7 +4,7 @@ import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/features/posts/liked_post_page.dart';
 import 'package:mini_twitter/features/posts/my_post_page.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:mini_twitter/core/utils/tab_bar_delegate.dart';
@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _initialFetch() async {
-    final provider = context.read<CurrentUserProvider>();
+    final provider = context.read<UserProvider>();
     final uid = widget.userId ?? provider.currentUser?.uid;
     print("Le user id recupere: ${widget.userId}");
     print("Le user id provider: ${provider.currentUser?.uid}");
@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _fetchUserInfo(String uid) async {
     if (widget.userId != uid) {
-      final provider = context.read<CurrentUserProvider>();
+      final provider = context.read<UserProvider>();
       setState(() => userInfo = provider.currentUser);
     } else {
       final user = await _userService.getUserById(uid);
@@ -86,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<CurrentUserProvider>();
+    final provider = context.watch<UserProvider>();
 
     if (userInfo == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));

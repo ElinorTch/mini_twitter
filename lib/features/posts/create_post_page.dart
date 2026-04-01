@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:mini_twitter/data/services/image_service.dart';
 import 'package:mini_twitter/data/services/post_service.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<CurrentUserProvider>();
+    final provider = context.read<UserProvider>();
 
     return Scaffold(
       backgroundColor: Colors.white,

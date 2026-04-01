@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/features/auth/login_page.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 
 class AuthGate extends StatelessWidget {
-  final CurrentUserProvider currentUser = CurrentUserProvider();
+  final UserProvider currentUser = UserProvider();
 
   AuthGate({super.key});
 

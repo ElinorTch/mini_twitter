@@ -5,7 +5,7 @@ import 'package:mini_twitter/features/auth/auth_gate.dart';
 import 'package:mini_twitter/features/posts/feed_page.dart';
 import 'package:mini_twitter/features/profile/profile_page.dart';
 import 'package:mini_twitter/features/posts/create_post_page.dart';
-import 'package:mini_twitter/domain/providers/current_user_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/utils/firebase_options.dart';
 import 'package:mini_twitter/features/shared/widgets/navigation_bar.dart';
@@ -20,7 +20,7 @@ void main() async {
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => CurrentUserProvider())],
+      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
       child: MyApp(),
     ),
   );
