@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/features/posts/following_feed_page.dart';
+import 'package:mini_twitter/features/posts/for_you_feed_page.dart';
 
 class FeedPage extends StatelessWidget {
   const FeedPage({super.key});
@@ -36,7 +37,8 @@ class FeedPage extends StatelessWidget {
                 child: TabBarView(
                   children: [
                     FollowingFeedPage(),
-                    Center(child: Text('For You Feed, To come!!')),
+                    ForYouFeedPage(),
+                    // Center(child: Text('For You Feed, To come!!')),
                     // Image.asset('assets/images/profile.png')
                   ],
                 ),

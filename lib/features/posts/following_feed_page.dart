@@ -20,15 +20,15 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
   void initState() {
     super.initState();
 
-    // Future.microtask(() {
-    //   if (!mounted) return;
+    Future.microtask(() {
+      if (!mounted) return;
 
-    //   final user = context.read<UserProvider>().currentUser;
+      final user = context.read<UserProvider>().currentUser;
 
-    //   if (user != null) {
-    //     context.read<FollowingFeedProvider>().loadPosts(user, isRefresh: true);
-    //   }
-    // });
+      if (user != null) {
+        context.read<FollowingFeedProvider>().loadPosts(user, isRefresh: true);
+      }
+    });
   }
 
   @override

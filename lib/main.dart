@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:mini_twitter/domain/providers/following_feed_provider.dart';
+import 'package:mini_twitter/domain/providers/for_you_feed_provider.dart';
 import 'package:mini_twitter/features/auth/auth_gate.dart';
 import 'package:mini_twitter/features/posts/feed_page.dart';
 import 'package:mini_twitter/features/profile/profile_page.dart';
@@ -24,6 +25,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => FollowingFeedProvider()),
+        ChangeNotifierProvider(create: (_) => ForYouFeedProvider()),
       ],
       child: MyApp(),
     ),
