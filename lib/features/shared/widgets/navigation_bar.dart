@@ -15,27 +15,32 @@ class AppNavigationBar extends StatelessWidget {
     return SizedBox(
       height: 70,
       child: NavigationBar(
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationSelected,
-      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home_outlined, size: 28,),
-          selectedIcon: Icon(Icons.home, size: 28,),
-          label: 'Feed',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.add_box_outlined, size: 28,),
-          selectedIcon: Icon(Icons.add_box, size: 28,),
-          label: 'Post',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.person_outline, size: 28,),
-          selectedIcon: Icon(Icons.person, size: 28,),
-          label: 'Profil',
-        ),
-      ],
-      )
+        selectedIndex: selectedIndex,
+        onDestinationSelected: onDestinationSelected,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined, size: 28),
+            selectedIcon: Icon(Icons.home, size: 28),
+            label: 'Feed',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.add_box_outlined, size: 28),
+            selectedIcon: Icon(Icons.add_box, size: 28),
+            label: 'Post',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline, size: 28),
+            selectedIcon: Icon(Icons.person, size: 28),
+            label: 'Profil',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.desktop_mac_outlined, size: 28),
+            selectedIcon: Icon(Icons.desktop_mac, size: 28),
+            label: 'Profil',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:mini_twitter/domain/providers/following_feed_provider.dart';
 import 'package:mini_twitter/domain/providers/for_you_feed_provider.dart';
 import 'package:mini_twitter/domain/providers/post_provider.dart';
 import 'package:mini_twitter/features/auth/auth_gate.dart';
+import 'package:mini_twitter/features/gouvAPI/bodacc_annonces_page.dart';
+import 'package:mini_twitter/features/gouvAPI/widgets/bodacc_annonces_widget.dart';
 import 'package:mini_twitter/features/posts/feed_page.dart';
 import 'package:mini_twitter/features/profile/profile_page.dart';
 import 'package:mini_twitter/features/posts/create_post_page.dart';
@@ -25,8 +27,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => FollowingFeedProvider()),
-        ChangeNotifierProvider(create: (_) => ForYouFeedProvider()),
         ChangeNotifierProvider(create: (_) => PostProvider()),
       ],
       child: MyApp(),
@@ -65,7 +65,12 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final TextEditingController usernameController = TextEditingController();
 
-  final List<Widget> _pages = [FeedPage(), CreatePostPage(), ProfilePage()];
+  final List<Widget> _pages = [
+    FeedPage(),
+    CreatePostPage(),
+    ProfilePage(),
+    BodaccPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
