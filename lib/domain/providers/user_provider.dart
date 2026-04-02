@@ -11,6 +11,21 @@ class UserProvider extends ChangeNotifier {
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
 
+  void toggleFollow(UserModel targetUser) async {
+    final current = currentUser!;
+    final isFollowing = current.following.contains(targetUser.uid);
+
+    if (isFollowing) {
+      current.following.remove(targetUser.uid);
+      notifyListeners();
+      await _userService.unfollowUser(current.uid, targetUser.uid);
+    } else {
+      current.following.add(targetUser.uid);
+      notifyListeners();
+      await _userService.followUser(current.uid, targetUser.uid);
+    }
+  }
+
   UserProvider() {
     FirebaseAuth.instance.authStateChanges().listen((firebaseUser) async {
       _isLoading = true;

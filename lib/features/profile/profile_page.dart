@@ -38,9 +38,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _initialFetch() async {
     final provider = context.read<UserProvider>();
     final uid = widget.userId ?? provider.currentUser?.uid;
-    print("Le user id recupere: ${widget.userId}");
-    print("Le user id provider: ${provider.currentUser?.uid}");
-    print("Le uid est: $uid");
 
     if (uid == null) return;
 
@@ -79,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final user = await _userService.getUserById(uid);
       if (mounted) {
         setState(() => userInfo = user);
-        print("Je suis dans le mounted user");
       }
     }
   }

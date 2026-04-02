@@ -119,18 +119,11 @@ class ProfileHeader extends StatelessWidget {
                   : 'Follow',
               isLoading: false,
               onPressed: () {
-                if (userProvider.currentUser!.following.contains(user.uid)) {
-                  userService.unfollowUser(
-                    userProvider.currentUser!.uid,
-                    user.uid,
-                  );
-                } else {
-                  userService.followUser(
-                    userProvider.currentUser!.uid,
-                    user.uid,
-                  );
-                }
+                userProvider.toggleFollow(user);
               },
+              color: userProvider.currentUser!.following.contains(user.uid)
+                  ? Color.fromARGB(255, 177, 8, 53)
+                  : Color.fromARGB(255, 11, 86, 161),
             ),
 
           // const SizedBox(height: 20),
