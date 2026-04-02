@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mini_twitter/domain/providers/following_feed_provider.dart';
 import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
-import 'package:mini_twitter/data/models/user_model.dart';
 import 'package:mini_twitter/domain/providers/user_provider.dart';
-import 'package:mini_twitter/data/services/post_service.dart';
-import 'package:mini_twitter/data/services/user_service.dart';
 import 'package:provider/provider.dart';
 
 class FollowingFeedPage extends StatefulWidget {
@@ -15,9 +13,6 @@ class FollowingFeedPage extends StatefulWidget {
 }
 
 class _FollowingFeedPageState extends State<FollowingFeedPage> {
-  final PostService _postService = PostService();
-  final UserService _userService = UserService();
-
   List<PostModel> posts = [];
   bool isLoading = true;
 
@@ -25,58 +20,59 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
   void initState() {
     super.initState();
 
-    final provider = context.read<UserProvider>();
-    Future.microtask(() => loadPosts(provider.currentUser!));
-  }
+    // Future.microtask(() {
+    //   if (!mounted) return;
 
-  Future<void> loadPosts(UserModel user) async {
-    // final provider = context.read<CurrentUserProvider>();
-    // final following = provider.currentUser?.following ?? [];
-    final following = user.following;
+    //   final user = context.read<UserProvider>().currentUser;
 
-    print("User is following: ${following}");
-
-    final fetchedPosts = await _postService.getFollowingPosts(following);
-
-    for (final post in fetchedPosts) {
-      await _userService.getUser(post.userId);
-    }
-
-    print("Les fetchposts $fetchedPosts");
-
-    setState(() {
-      // posts = [];
-      posts = fetchedPosts;
-      isLoading = false;
-    });
+    //   if (user != null) {
+    //     context.read<FollowingFeedProvider>().loadPosts(user, isRefresh: true);
+    //   }
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<UserProvider>();
+    final feed = context.watch<FollowingFeedProvider>();
+    final user = context.watch<UserProvider>().currentUser;
 
-    if (provider.currentUser == null) {
+    if (user == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (posts.isEmpty) {
-      return IconButton(
-        icon: Icon(Icons.refresh),
-        onPressed: () {
-          loadPosts(provider.currentUser!);
-        },
+    if (!feed.hasLoadedOnce && feed.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (feed.posts.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Aucun post à afficher"),
+            TextButton(
+              onPressed: () => feed.loadPosts(user, isRefresh: true),
+              child: const Text("Réessayer"),
+            ),
+          ],
+        ),
       );
     }
 
-    return ListView.builder(
-      physics: AlwaysScrollableScrollPhysics(),
-      itemCount: posts.length,
-      itemBuilder: (context, index) {
-        final post = posts[index];
-        final user = _userService.usersCache[post.userId]!;
+    return RefreshIndicator(
+      onRefresh: () => feed.loadPosts(user, isRefresh: true),
+      child: ListView.builder(
+        // Physics indispensable pour que le scroll fonctionne même si la liste est courte
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: feed.posts.length,
+        itemBuilder: (context, index) {
+          final post = feed.posts[index];
+          final postUser = feed.getUserFromCache(post.userId);
 
-        return PostCard(post: post, user: user);
-      },
+          if (postUser == null) return const SizedBox();
+          return PostCard(post: post, user: postUser);
+        },
+      ),
     );
   }
 }

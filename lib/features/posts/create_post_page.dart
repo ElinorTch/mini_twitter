@@ -51,6 +51,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                 PostModel post = PostModel(
                   userId: provider.currentUser!.uid,
                   text: _textController.text,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
                 );
 
                 String postId = await _postService.createPosts(post);

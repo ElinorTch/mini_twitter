@@ -16,14 +16,20 @@ class UserService {
     return FirebaseAuth.instance.currentUser!;
   }
 
-  Future<UserModel> getUser(String userId) async {
+  Future<UserModel?> getUser(String userId) async {
     if (usersCache.containsKey(userId)) {
-      return usersCache[userId]!;
+      return usersCache[userId];
     }
 
     final user = await getUserById(userId);
-    print("Fetched user: ${user?.email}");
-    usersCache[userId] = user!;
+
+    if (user == null) {
+      print("⚠️ User not found in Firestore: $userId");
+      return null;
+    }
+
+    usersCache[userId] = user;
+
     return user;
   }
 
@@ -61,7 +67,6 @@ class UserService {
   }
 
   Future<UserModel?> getUserById(String uid) async {
-    print("Getting user by ID: $uid");
     DocumentSnapshot doc = await users.doc(uid).get();
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data() as Map<String, dynamic>, uid);
