@@ -9,7 +9,6 @@ class PostProvider extends ChangeNotifier {
   final UserService _userService = UserService();
   final Map<String, PostModel> postCache = {};
 
-  // Feeds
   List<PostModel> forYouPosts = [];
   List<PostModel> followingPosts = [];
 
@@ -19,7 +18,6 @@ class PostProvider extends ChangeNotifier {
   bool hasLoadedForYou = false;
   bool hasLoadedFollowing = false;
 
-  // Cache user
   UserModel? getUserFromCache(String userId) {
     return _userService.usersCache[userId];
   }

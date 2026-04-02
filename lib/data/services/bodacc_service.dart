@@ -18,7 +18,7 @@ class BodaccService {
     }
 
     final data = jsonDecode(response.body);
-    print("Api call $data");
+
     return data["records"] ?? [];
   }
 }

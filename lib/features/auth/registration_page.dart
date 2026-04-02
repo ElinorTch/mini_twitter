@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/features/shared/widgets/form_labeled_input.dart';
-import 'package:mini_twitter/main.dart';
 import 'package:mini_twitter/features/auth/login_page.dart';
 import 'package:mini_twitter/data/services/user_service.dart';
 
@@ -151,10 +150,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  // Validate returns true if the form is valid, or false otherwise.
                   if (_loginFormKey.currentState!.validate()) {
-                    // If the form is valid, display a snackbar. In the real world,
-                    // you'd often call a server or save the information in a database.
                     handleFirebaseRegistration(
                       context: context,
                       formKey: _loginFormKey,
@@ -263,13 +259,6 @@ Future<void> handleFirebaseRegistration({
           );
         }
       }
-
-      Future.delayed(const Duration(seconds: 3), () {
-        Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const HomePage()),
-          (route) => false,
-        );
-      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         message = 'The password provided is too weak.';

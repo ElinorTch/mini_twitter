@@ -35,10 +35,10 @@ class UserProvider extends ChangeNotifier {
         _currentUser = null;
       } else {
         _currentUser = await _userService.getUserById(firebaseUser.uid);
-      }
 
-      _isLoading = false;
-      notifyListeners();
+        _isLoading = false;
+        notifyListeners();
+      }
     });
   }
 }
