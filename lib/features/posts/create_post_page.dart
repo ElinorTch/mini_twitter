@@ -53,6 +53,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   text: _textController.text,
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),
+                  likes: [],
+                  comments: [],
                 );
 
                 String postId = await _postService.createPosts(post);

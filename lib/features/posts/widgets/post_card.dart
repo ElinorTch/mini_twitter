@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/core/helpers/date_helper.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:mini_twitter/features/profile/profile_page.dart';
+import 'package:provider/provider.dart';
 
 class PostCard extends StatelessWidget {
   final UserModel user;
@@ -12,6 +14,9 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserModel? currentUser = context.watch<UserProvider>().currentUser;
+    final isLiked = post.likes.contains(currentUser?.uid);
+
     return Card(
       color: Colors.white,
       child: Padding(
@@ -93,9 +98,7 @@ class PostCard extends StatelessWidget {
                   children: [
                     InkWell(
                       borderRadius: BorderRadius.circular(50),
-                      onTap: () {
-                        print("Icon clicked");
-                      },
+                      onTap: () {},
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: Row(
@@ -103,10 +106,12 @@ class PostCard extends StatelessWidget {
                             Icon(
                               Icons.favorite,
                               size: 20,
-                              color: Color(0xFF617589),
+                              color: isLiked
+                                  ? Color.fromARGB(255, 161, 24, 49)
+                                  : Color(0xFF617589),
                             ),
                             SizedBox(width: 2),
-                            Text('${post.likes}'),
+                            Text('${post.likes.length}'),
                           ],
                         ),
                       ),

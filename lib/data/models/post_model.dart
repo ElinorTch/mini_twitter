@@ -6,8 +6,8 @@ class PostModel {
   final String text;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int likes = 0;
-  final List<String> comments = [];
+  final List<String> likes;
+  final List<String> comments;
   String? imageUrl;
 
   PostModel({
@@ -17,6 +17,8 @@ class PostModel {
     this.uid,
     required this.createdAt,
     required this.updatedAt,
+    required this.likes,
+    required this.comments,
   });
 
   factory PostModel.fromMap(Map<String, dynamic> map, String documentId) {
@@ -27,6 +29,8 @@ class PostModel {
       imageUrl: map['imageUrl'],
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      likes: List<String>.from(map['likes'] ?? []),
+      comments: List<String>.from(map['comments'] ?? []),
     );
   }
 

@@ -17,13 +17,21 @@ class FollowingFeedProvider extends ChangeNotifier {
     return _userService.usersCache[userId];
   }
 
-  bool userCacheIsEmpty() {
-    return _userService.usersCache.isEmpty;
+  void toggleLike(PostModel post, String userId) async {
+    final isLiked = post.likes.contains(userId);
+
+    if (isLiked) {
+      post.likes.remove(userId);
+      await _postService.unlikePost(post.uid!, userId);
+    } else {
+      post.likes.add(userId);
+      await _postService.likePost(post.uid!, userId);
+    }
+
+    notifyListeners();
   }
 
   Future<void> loadPosts(UserModel user, {bool isRefresh = false}) async {
-    print(user.email);
-    print(userCacheIsEmpty());
     if (!isRefresh && _hasLoadedOnce) return;
 
     isLoading = true;

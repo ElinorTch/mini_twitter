@@ -57,6 +57,18 @@ class PostService {
         .toList();
   }
 
+  Future<void> likePost(String postId, String userId) async {
+    await posts.doc(postId).update({
+      'likes': FieldValue.arrayUnion([userId]),
+    });
+  }
+
+  Future<void> unlikePost(String postId, String userId) async {
+    await posts.doc(postId).update({
+      'likes': FieldValue.arrayRemove([userId]),
+    });
+  }
+
   Future<List<PostModel>> getFollowingPosts(
     List<String> followingIds, {
     int limit = 10,
