@@ -58,14 +58,12 @@ class PostService {
   }
 
   Future<void> likePost(String postId, String userId) async {
-    print("like");
     await posts.doc(postId).update({
       'likes': FieldValue.arrayUnion([userId]),
     });
   }
 
   Future<void> unlikePost(String postId, String userId) async {
-    print("Unlike");
     await posts.doc(postId).update({
       'likes': FieldValue.arrayRemove([userId]),
     });

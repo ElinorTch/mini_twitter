@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mini_twitter/domain/providers/following_feed_provider.dart';
+import 'package:mini_twitter/domain/providers/post_provider.dart';
 import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/domain/providers/user_provider.dart';
@@ -24,34 +24,31 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
       if (!mounted) return;
 
       final user = context.read<UserProvider>().currentUser;
-
       if (user != null) {
-        context.read<FollowingFeedProvider>().loadPosts(user, isRefresh: true);
+        context.read<PostProvider>().loadFollowing(user, refresh: true);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final feed = context.watch<FollowingFeedProvider>();
+    final feed = context.watch<PostProvider>();
     final user = context.watch<UserProvider>().currentUser;
 
-    if (user == null) {
+    if (user == null || feed.isLoadingFollowing && !feed.hasLoadedFollowing) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (!feed.hasLoadedOnce && feed.isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    final posts = feed.followingPosts;
 
-    if (feed.posts.isEmpty) {
+    if (posts.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("Aucun post à afficher"),
             TextButton(
-              onPressed: () => feed.loadPosts(user, isRefresh: true),
+              onPressed: () => feed.loadFollowing(user, refresh: true),
               child: const Text("Réessayer"),
             ),
           ],
@@ -60,21 +57,17 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
     }
 
     return RefreshIndicator(
-      onRefresh: () => feed.loadPosts(user, isRefresh: true),
+      onRefresh: () => feed.loadFollowing(user, refresh: true),
       child: ListView.builder(
-        // Physics indispensable pour que le scroll fonctionne même si la liste est courte
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: feed.posts.length,
+        itemCount: posts.length,
         itemBuilder: (context, index) {
-          final post = feed.posts[index];
+          final post = posts[index];
           final postUser = feed.getUserFromCache(post.userId);
 
           if (postUser == null) return const SizedBox();
-          return PostCard(
-            post: post,
-            user: postUser,
-            followingFeedProvider: feed,
-          );
+
+          return PostCard(post: post, user: postUser, postProvider: feed);
         },
       ),
     );

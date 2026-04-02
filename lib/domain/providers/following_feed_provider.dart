@@ -17,18 +17,25 @@ class FollowingFeedProvider extends ChangeNotifier {
     return _userService.usersCache[userId];
   }
 
-  void toggleLike(PostModel post, String userId) async {
+  void toggleLike(PostModel post, UserModel currentUser) async {
+    final userId = currentUser.uid;
     final isLiked = post.likes.contains(userId);
 
     if (isLiked) {
       post.likes.remove(userId);
+      currentUser.likedPosts.remove(post.uid);
+      notifyListeners();
+
       await _postService.unlikePost(post.uid!, userId);
+      await _userService.removeLikedPost(userId, post.uid!);
     } else {
       post.likes.add(userId);
-      await _postService.likePost(post.uid!, userId);
-    }
+      currentUser.likedPosts.add(post.uid!);
+      notifyListeners();
 
-    notifyListeners();
+      await _postService.likePost(post.uid!, userId);
+      await _userService.addLikedPost(userId, post.uid!);
+    }
   }
 
   Future<void> loadPosts(UserModel user, {bool isRefresh = false}) async {

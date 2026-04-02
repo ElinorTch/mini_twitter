@@ -82,6 +82,18 @@ class UserService {
     return query.docs.isNotEmpty;
   }
 
+  Future<void> addLikedPost(String userId, String postId) async {
+    await users.doc(userId).update({
+      'likedPosts': FieldValue.arrayUnion([postId]),
+    });
+  }
+
+  Future<void> removeLikedPost(String userId, String postId) async {
+    await users.doc(userId).update({
+      'likedPosts': FieldValue.arrayRemove([postId]),
+    });
+  }
+
   Future<void> followUser(String currentUserId, String targetUserId) async {
     await users.doc(currentUserId).update({
       'following': FieldValue.arrayUnion([targetUserId]),
