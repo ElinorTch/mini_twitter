@@ -70,7 +70,11 @@ class _FollowingFeedPageState extends State<FollowingFeedPage> {
           final postUser = feed.getUserFromCache(post.userId);
 
           if (postUser == null) return const SizedBox();
-          return PostCard(post: post, user: postUser);
+          return PostCard(
+            post: post,
+            user: postUser,
+            followingFeedProvider: feed,
+          );
         },
       ),
     );

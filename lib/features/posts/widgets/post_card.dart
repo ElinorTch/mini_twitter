@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:mini_twitter/core/helpers/date_helper.dart';
 import 'package:mini_twitter/data/models/post_model.dart';
 import 'package:mini_twitter/data/models/user_model.dart';
+import 'package:mini_twitter/domain/providers/following_feed_provider.dart';
+import 'package:mini_twitter/domain/providers/for_you_feed_provider.dart';
 import 'package:mini_twitter/domain/providers/user_provider.dart';
+import 'package:mini_twitter/features/posts/following_feed_page.dart';
 import 'package:mini_twitter/features/profile/profile_page.dart';
 import 'package:provider/provider.dart';
 
 class PostCard extends StatelessWidget {
   final UserModel user;
   final PostModel post;
+  final FollowingFeedProvider? followingFeedProvider;
+  final ForYouFeedProvider? forYouFeedProvider;
 
-  const PostCard({super.key, required this.user, required this.post});
+  const PostCard({
+    super.key,
+    required this.user,
+    required this.post,
+    this.followingFeedProvider,
+    this.forYouFeedProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +109,12 @@ class PostCard extends StatelessWidget {
                   children: [
                     InkWell(
                       borderRadius: BorderRadius.circular(50),
-                      onTap: () {},
+                      onTap: () {
+                        followingFeedProvider?.toggleLike(
+                          post,
+                          currentUser!.uid,
+                        );
+                      },
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: Row(
