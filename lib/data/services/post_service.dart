@@ -43,11 +43,13 @@ class PostService {
     await postRef.update({'imageUrl': newImageUrl});
   }
 
-  Future<List<PostModel>> getAllPosts() async {
+  Future<List<PostModel>> getAllPosts(UserModel user) async {
     final snapshot = await FirebaseFirestore.instance
         .collection('posts')
+        .where('userId', isNotEqualTo: user.uid)
+        .orderBy('userId')
         .orderBy('createdAt', descending: true)
-        .limit(50) // On limite pour les performances
+        .limit(50)
         .get();
 
     return snapshot.docs

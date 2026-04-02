@@ -15,7 +15,7 @@ class ForYouFeedProvider extends ChangeNotifier {
   // Récupère l'utilisateur depuis le cache global du UserService
   UserModel? getUserFromCache(String userId) => _userService.usersCache[userId];
 
-  Future<void> loadAllPosts({bool isRefresh = false}) async {
+  Future<void> loadAllPosts(UserModel user, {bool isRefresh = false}) async {
     if (!isRefresh && hasLoadedOnce) return;
     if (isLoading) return;
 
@@ -24,7 +24,7 @@ class ForYouFeedProvider extends ChangeNotifier {
 
     try {
       // 1. Récupérer TOUS les posts (ajoute cette méthode dans ton PostService)
-      final fetchedPosts = await _postService.getAllPosts();
+      final fetchedPosts = await _postService.getAllPosts(user);
 
       // 2. Remplir le cache des auteurs pour éviter les "null" dans l'UI
       await Future.wait(

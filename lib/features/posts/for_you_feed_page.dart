@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_twitter/domain/providers/for_you_feed_provider.dart';
+import 'package:mini_twitter/domain/providers/user_provider.dart';
 import 'package:mini_twitter/features/posts/widgets/post_card.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class _ForYouFeedPageState extends State<ForYouFeedPage> {
   @override
   Widget build(BuildContext context) {
     final feed = context.watch<ForYouFeedProvider>();
+    final user = context.watch<UserProvider>().currentUser!;
 
     if (feed.isLoading && !feed.hasLoadedOnce) {
       return const Center(child: CircularProgressIndicator());
@@ -34,7 +36,7 @@ class _ForYouFeedPageState extends State<ForYouFeedPage> {
           children: [
             const Text("Aucun post à afficher"),
             TextButton(
-              onPressed: () => feed.loadAllPosts(isRefresh: true),
+              onPressed: () => feed.loadAllPosts(user, isRefresh: true),
               child: const Text("Réessayer"),
             ),
           ],
@@ -43,7 +45,7 @@ class _ForYouFeedPageState extends State<ForYouFeedPage> {
     }
 
     return RefreshIndicator(
-      onRefresh: () => feed.loadAllPosts(isRefresh: true),
+      onRefresh: () => feed.loadAllPosts(user, isRefresh: true),
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: feed.posts.length,
